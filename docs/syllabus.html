@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Stack Development Roadmap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            padding: 20px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .roadmap {
+            margin-bottom: 40px;
+        }
+        
+        .roadmap h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .phase {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .phase h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .phase ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .phase li {
+            padding: 8px 0;
+            position: relative;
+        }
+        
+        .phase li:before {
+            content: "→";
+            position: absolute;
+            left: -20px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .project-tag {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+        
+        .hours-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .tab-button {
+                padding: 15px 20px;
+                font-size: 0.9em;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Full Stack Development Roadmap</h1>
+            <p>Master Modern Web Development - HTML, CSS, JavaScript, React, Node.js & More</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'mern')">MERN Stack</button>
+            <button class="tab-button" onclick="openTab(event, 'java')">Java Spring Boot</button>
+            <button class="tab-button" onclick="openTab(event, 'python')">Python Flask</button>
+        </div>
+        
+        <!-- MERN Stack Tab -->
+        <div id="mern" class="tab-content active">
+            <div class="roadmap">
+                <h2>📍 Learning Roadmap - MERN Stack</h2>
+                
+                <div class="phase">
+                    <h3>Phase 1: Frontend Fundamentals (Days 1-10)</h3>
+                    <ul>
+                        <li>HTML5 - Structure and Semantics</li>
+                        <li>CSS3 - Styling, Layouts, Flexbox, Grid</li>
+                        <li>JavaScript ES6+ - Core Programming</li>
+                        <li>DOM Manipulation & Events</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 2: React Development (Days 11-16)</h3>
+                    <ul>
+                        <li>React Basics - Components, Props, JSX</li>
+                        <li>State Management - useState, useEffect</li>
+                        <li>React Router - Navigation</li>
+                        <li>Forms & Validation</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 3: Backend & Database (Days 17-20)</h3>
+                    <ul>
+                        <li>Node.js & Express.js - REST APIs</li>
+                        <li>MySQL Database - CRUD Operations</li>
+                        <li>API Integration with React</li>
+                        <li>Full Stack Application</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>📚 Detailed Course Structure</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hours</th>
+                        <th>Module</th>
+                        <th>Topic</th>
+                        <th>Example</th>
+                        <th>Classwork</th>
+                        <th>Assignment</th>
+                        <th>Project</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="hours-badge">1-2</span></td>
+                        <td>HTML</td>
+                        <td>HTML Basics & Forms</td>
+                        <td>About Me page</td>
+                        <td>Resume page with links</td>
+                        <td>Contact form with image</td>
+                        <td><span class="project-tag">Resume Website</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">3-4</span></td>
+                        <td>CSS</td>
+                        <td>CSS Basics & Layouts</td>
+                        <td>Styled About Me page</td>
+                        <td>2-column profile layout</td>
+                        <td>3-column layout design</td>
+                        <td><span class="project-tag">Temperature Converter</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">5-6</span></td>
+                        <td>JavaScript</td>
+                        <td>JS Basics & Control Flow</td>
+                        <td>Calculator (add 2 numbers)</td>
+                        <td>Even/Odd checker</td>
+                        <td>Prime numbers 1-50</td>
+                        <td><span class="project-tag">Click Counter</span> <span class="project-tag">Quiz App</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">7-8</span></td>
+                        <td>JavaScript</td>
+                        <td>Arrays, Functions & DOM</td>
+                        <td>Shopping cart array</td>
+                        <td>Array of 5 marks & average</td>
+                        <td>Shopping cart calculator</td>
+                        <td><span class="project-tag">Expense Tracker</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">9-10</span></td>
+                        <td>JavaScript</td>
+                        <td>ES6 Features & Async</td>
+                        <td>Arrow functions, map/reduce</td>
+                        <td>Form validation script</td>
+                        <td>Quiz app with DOM</td>
+                        <td><span class="project-tag">Random Quote Generator</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">11-12</span></td>
+                        <td>React</td>
+                        <td>React Basics & State</td>
+                        <td>HelloUser component</td>
+                        <td>ProfileCard with props</td>
+                        <td>ProductCard component</td>
+                        <td><span class="project-tag">Counter App</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">13-14</span></td>
+                        <td>React</td>
+                        <td>Lists & Forms</td>
+                        <td>Student list rendering</td>
+                        <td>Product array display</td>
+                        <td>Signup form validation</td>
+                        <td><span class="project-tag">Todo App</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">15-16</span></td>
+                        <td>React</td>
+                        <td>Router & Mini Project</td>
+                        <td>Home & About navigation</td>
+                        <td>Contact page creation</td>
+                        <td>FAQ page with routing</td>
+                        <td><span class="project-tag">Employee Management UI</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">17-18</span></td>
+                        <td>Node.js</td>
+                        <td>Backend & APIs</td>
+                        <td>Hello World server</td>
+                        <td>Static HTML server</td>
+                        <td>Custom route /about</td>
+                        <td><span class="project-tag">REST API</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">19-20</span></td>
+                        <td>MySQL</td>
+                        <td>Database & Integration</td>
+                        <td>Students table creation</td>
+                        <td>SELECT & WHERE queries</td>
+                        <td>Insert 5 student records</td>
+                        <td><span class="project-tag">Full Stack Employee System</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🎯 Final Group Projects</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 1:</strong> Employee Management System (HTML + CSS + JavaScript)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 2:</strong> E-commerce Product Catalog (React)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 3:</strong> Full Stack CRUD Application (MERN)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Java Spring Boot Tab -->
+        <div id="java" class="tab-content">
+            <div class="roadmap">
+                <h2>📍 Learning Roadmap - Java Spring Boot</h2>
+                
+                <div class="phase">
+                    <h3>Phase 1: Java Fundamentals (Days 1-8)</h3>
+                    <ul>
+                        <li>Java Basics - Variables, Data Types, Operators</li>
+                        <li>OOP Concepts - Classes, Objects, Inheritance</li>
+                        <li>Collections Framework - List, Set, Map</li>
+                        <li>Exception Handling & File I/O</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 2: Spring Boot Development (Days 9-16)</h3>
+                    <ul>
+                        <li>Spring Boot Basics - Project Structure</li>
+                        <li>REST APIs - Controllers, Services</li>
+                        <li>Spring Data JPA - Database Integration</li>
+                        <li>Dependency Injection & Bean Management</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 3: Advanced Topics (Days 17-20)</h3>
+                    <ul>
+                        <li>Spring Security - Authentication</li>
+                        <li>Validation & Error Handling</li>
+                        <li>Testing - JUnit & Mockito</li>
+                        <li>Full Stack Integration with React</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>📚 Detailed Course Structure</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hours</th>
+                        <th>Module</th>
+                        <th>Topic</th>
+                        <th>Example</th>
+                        <th>Classwork</th>
+                        <th>Assignment</th>
+                        <th>Project</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="hours-badge">1-2</span></td>
+                        <td>Java Core</td>
+                        <td>Java Basics</td>
+                        <td>Hello World program</td>
+                        <td>Calculator application</td>
+                        <td>Grade calculator</td>
+                        <td><span class="project-tag">Banking System</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">3-4</span></td>
+                        <td>Java Core</td>
+                        <td>OOP Concepts</td>
+                        <td>Class & Object demo</td>
+                        <td>Student management class</td>
+                        <td>Library system design</td>
+                        <td><span class="project-tag">Inventory Management</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">5-6</span></td>
+                        <td>Java Core</td>
+                        <td>Collections & Streams</td>
+                        <td>ArrayList operations</td>
+                        <td>Employee list filtering</td>
+                        <td>Data processing with streams</td>
+                        <td><span class="project-tag">Student Database</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">7-8</span></td>
+                        <td>Java Core</td>
+                        <td>Exception & File Handling</td>
+                        <td>Try-catch examples</td>
+                        <td>File read/write operations</td>
+                        <td>CSV file processor</td>
+                        <td><span class="project-tag">Log Analyzer</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">9-10</span></td>
+                        <td>Spring Boot</td>
+                        <td>Spring Boot Intro</td>
+                        <td>First Spring Boot app</td>
+                        <td>REST controller creation</td>
+                        <td>CRUD endpoints</td>
+                        <td><span class="project-tag">Product API</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">11-12</span></td>
+                        <td>Spring Boot</td>
+                        <td>Spring Data JPA</td>
+                        <td>Entity & Repository demo</td>
+                        <td>Database CRUD operations</td>
+                        <td>Relationship mapping</td>
+                        <td><span class="project-tag">Book Management</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">13-14</span></td>
+                        <td>Spring Boot</td>
+                        <td>Service Layer & DTOs</td>
+                        <td>Service class example</td>
+                        <td>Business logic implementation</td>
+                        <td>DTO transformation</td>
+                        <td><span class="project-tag">Order Processing</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">15-16</span></td>
+                        <td>Spring Boot</td>
+                        <td>Validation & Exception</td>
+                        <td>Bean validation demo</td>
+                        <td>Custom exception handler</td>
+                        <td>Global error handling</td>
+                        <td><span class="project-tag">User Management</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">17-18</span></td>
+                        <td>Spring Boot</td>
+                        <td>Spring Security</td>
+                        <td>Basic authentication setup</td>
+                        <td>JWT token implementation</td>
+                        <td>Role-based access</td>
+                        <td><span class="project-tag">Secure API</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">19-20</span></td>
+                        <td>Full Stack</td>
+                        <td>React + Spring Integration</td>
+                        <td>API consumption in React</td>
+                        <td>Full CRUD application</td>
+                        <td>Authentication flow</td>
+                        <td><span class="project-tag">Employee Management System</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🎯 Final Group Projects</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 1:</strong> Hospital Management System (Java Core)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 2:</strong> E-commerce Backend (Spring Boot + MySQL)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 3:</strong> Full Stack Task Manager (React + Spring Boot)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Python Flask Tab -->
+        <div id="python" class="tab-content">
+            <div class="roadmap">
+                <h2>📍 Learning Roadmap - Python Flask</h2>
+                
+                <div class="phase">
+                    <h3>Phase 1: Python Fundamentals (Days 1-8)</h3>
+                    <ul>
+                        <li>Python Basics - Variables, Data Types, Operators</li>
+                        <li>Control Flow - If/Else, Loops</li>
+                        <li>Data Structures - Lists, Tuples, Dictionaries</li>
+                        <li>Functions & Modules</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 2: Flask Development (Days 9-16)</h3>
+                    <ul>
+                        <li>Flask Basics - Routes, Templates</li>
+                        <li>REST APIs - JSON responses</li>
+                        <li>SQLAlchemy - Database ORM</li>
+                        <li>Forms & Validation</li>
+                    </ul>
+                </div>
+                
+                <div class="phase">
+                    <h3>Phase 3: Advanced Topics (Days 17-20)</h3>
+                    <ul>
+                        <li>Authentication - Flask-Login</li>
+                        <li>Blueprints & Project Structure</li>
+                        <li>API Testing & Debugging</li>
+                        <li>Full Stack Integration with React</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>📚 Detailed Course Structure</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hours</th>
+                        <th>Module</th>
+                        <th>Topic</th>
+                        <th>Example</th>
+                        <th>Classwork</th>
+                        <th>Assignment</th>
+                        <th>Project</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="hours-badge">1-2</span></td>
+                        <td>Python Core</td>
+                        <td>Python Basics</td>
+                        <td>Hello World & variables</td>
+                        <td>Calculator program</td>
+                        <td>Temperature converter</td>
+                        <td><span class="project-tag">Number Games</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">3-4</span></td>
+                        <td>Python Core</td>
+                        <td>Control Flow & Loops</td>
+                        <td>Multiplication table</td>
+                        <td>Even/Odd checker</td>
+                        <td>Prime number finder</td>
+                        <td><span class="project-tag">Pattern Printer</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">5-6</span></td>
+                        <td>Python Core</td>
+                        <td>Lists & Dictionaries</td>
+                        <td>Shopping list operations</td>
+                        <td>Student grade management</td>
+                        <td>Dictionary operations</td>
+                        <td><span class="project-tag">Contact Book</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">7-8</span></td>
+                        <td>Python Core</td>
+                        <td>Functions & Modules</td>
+                        <td>Factorial function</td>
+                        <td>String manipulation functions</td>
+                        <td>Custom module creation</td>
+                        <td><span class="project-tag">Math Library</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">9-10</span></td>
+                        <td>Flask</td>
+                        <td>Flask Basics</td>
+                        <td>Hello Flask app</td>
+                        <td>Multiple routes creation</td>
+                        <td>Template rendering</td>
+                        <td><span class="project-tag">Portfolio Website</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">11-12</span></td>
+                        <td>Flask</td>
+                        <td>REST APIs</td>
+                        <td>JSON response demo</td>
+                        <td>GET/POST endpoints</td>
+                        <td>CRUD API creation</td>
+                        <td><span class="project-tag">Todo API</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">13-14</span></td>
+                        <td>Flask</td>
+                        <td>Database with SQLAlchemy</td>
+                        <td>Model definition</td>
+                        <td>Database CRUD operations</td>
+                        <td>Relationship mapping</td>
+                        <td><span class="project-tag">Blog System</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">15-16</span></td>
+                        <td>Flask</td>
+                        <td>Forms & Validation</td>
+                        <td>WTForms demo</td>
+                        <td>Registration form</td>
+                        <td>Custom validators</td>
+                        <td><span class="project-tag">Survey App</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">17-18</span></td>
+                        <td>Flask</td>
+                        <td>Authentication</td>
+                        <td>Login system demo</td>
+                        <td>User registration</td>
+                        <td>Password hashing</td>
+                        <td><span class="project-tag">User Management</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="hours-badge">19-20</span></td>
+                        <td>Full Stack</td>
+                        <td>React + Flask Integration</td>
+                        <td>API consumption in React</td>
+                        <td>Full CRUD application</td>
+                        <td>Authentication flow</td>
+                        <td><span class="project-tag">Social Media Dashboard</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🎯 Final Group Projects</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 1:</strong> Library Management System (Python Core)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 2:</strong> RESTful Blog API (Flask + SQLAlchemy)</li>
+                    <li style="padding: 10px 0; font-size: 1.1em;"><strong>Project 3:</strong> Full Stack E-learning Platform (React + Flask)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
