@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Syllabus - Full Stack Elite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --header-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --accent: #3b82f6;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --code-bg: #f1f5f9;
+            --code-text: #0f172a;
+
+            /* Status Colors */
+            --tag-concept: #e0f2fe;
+            --text-concept: #0369a1;
+            --tag-example: #f0fdf4;
+            --text-example: #15803d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            padding: 40px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            /* Wider for extra column */
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            font-size: 1.1em;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs Styling */
+        .tabs-wrapper {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border-radius: 50px;
+            display: inline-flex;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            padding: 10px 30px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #cbd5e1;
+            border-radius: 40px;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--text-main);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styling */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1400px;
+            font-size: 0.9em;
+        }
+
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75em;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            z-index: 10;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Column Widths & Styles */
+        .col-sr {
+            width: 60px;
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .col-topic {
+            width: 15%;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .col-concepts {
+            width: 20%;
+        }
+
+        .col-time {
+            width: 10%;
+            font-weight: 600;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .col-example {
+            width: 15%;
+        }
+
+        .col-classwork {
+            width: 15%;
+        }
+
+        .col-assign {
+            width: 15%;
+        }
+
+        .col-project {
+            width: 15%;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Content Styling */
+        .concept-tag {
+            display: inline-block;
+            background: var(--tag-concept);
+            color: var(--text-concept);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin: 2px;
+            font-weight: 500;
+        }
+
+        .code-snippet {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 12px;
+            color: var(--text-muted);
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Stage Headers */
+        .stage-row {
+            background: var(--bg-light);
+            text-align: center;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            background: var(--text-main);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Track Visibility */
+        tbody.track-body {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        tbody.track-body.active {
+            display: table-row-group;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 8px;
+            }
+
+            header {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            p.subtitle {
+                font-size: 0.95em;
+            }
+
+            .tabs-container {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .tab-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            /* Hide table headers */
+            thead {
+                display: none;
+            }
+
+            /* Convert table to card layout */
+            table,
+            tbody,
+            tr {
+                display: block;
+                width: 100%;
+            }
+
+            tbody.track-body {
+                display: none;
+            }
+
+            tbody.track-body.active {
+                display: block;
+            }
+
+            /* Stage headers */
+            .stage-row {
+                display: block;
+                margin: 20px 0 10px 0;
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .stage-badge {
+                font-size: 0.85em;
+                padding: 6px 16px;
+            }
+
+            /* Card styling for each row */
+            tr:not(.stage-row) {
+                background: white;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                margin-bottom: 15px;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            tr:not(.stage-row):hover {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* All table cells as blocks */
+            td {
+                display: block;
+                padding: 8px 0;
+                border: none;
+                text-align: left;
+            }
+
+            /* Add labels before content */
+            td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-size: 0.7em;
+                letter-spacing: 0.05em;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            /* Hide serial number label */
+            .col-sr::before {
+                display: none;
+            }
+
+            .col-sr {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                width: auto;
+                background: var(--accent);
+                color: white;
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 0.8em;
+                font-weight: 600;
+            }
+
+            /* Topic as card header */
+            .col-topic {
+                font-size: 1.1em;
+                color: var(--accent);
+                margin-bottom: 10px;
+                padding-top: 0;
+            }
+
+            .col-topic::before {
+                display: none;
+            }
+
+            /* Time badge */
+            .col-time {
+                text-align: left;
+                background: var(--tag-example);
+                color: var(--text-example);
+                padding: 6px 10px;
+                border-radius: 6px;
+                display: inline-block;
+                font-size: 0.85em;
+                margin-top: 5px;
+            }
+
+            /* Adjust column widths */
+            .col-concepts,
+            .col-example,
+            .col-classwork,
+            .col-assign,
+            .col-project {
+                width: 100%;
+            }
+
+            /* Better spacing for lists */
+            ul {
+                margin-top: 5px;
+            }
+
+            li {
+                font-size: 0.9em;
+                margin-bottom: 4px;
+            }
+
+            /* Code snippets */
+            .code-snippet {
+                font-size: 0.8em;
+                padding: 6px 8px;
+            }
+
+            /* Concept tags */
+            .concept-tag {
+                font-size: 0.75em;
+                padding: 3px 6px;
+                margin: 2px 2px 2px 0;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            header {
+                padding: 20px;
+                color: black;
+                background: none;
+                border-bottom: 2px solid black;
+            }
+
+            .tabs-wrapper {
+                display: none;
+            }
+
+            tbody.track-body.active {
+                display: table-row-group;
+            }
+
+            h1 {
+                color: black;
+            }
+
+            p.subtitle {
+                color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Full Stack Elite Program</h1>
+            <p class="subtitle">Comprehensive Curriculum with Detailed Concept Mapping</p>
+
+            <div class="tabs-wrapper">
+                <div class="tabs-container">
+                    <button class="tab-btn active" onclick="switchTrack('node')">Node.js Track</button>
+                    <button class="tab-btn" onclick="switchTrack('java')">Java Track</button>
+                    <button class="tab-btn" onclick="switchTrack('python')">Python Track</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-sr">#</th>
+                        <th class="col-topic">Topic</th>
+                        <th class="col-concepts">Concepts to Cover</th>
+                        <th class="col-time">Time</th>
+                        <th class="col-example">Example Program</th>
+                        <th class="col-classwork">Class Work</th>
+                        <th class="col-assign">Assignment</th>
+                        <th class="col-project">Project</th>
+                    </tr>
+                </thead>
+
+                <!-- STAGE 1 -->
+                <tbody>
+                    <tr class="stage-row">
+                        <td colspan="8"><span class="stage-badge">Stage 1: The Foundation</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">1</td>
+                        <td class="col-topic">HTML5 Core</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Structure</span>
+                            <span class="concept-tag">Headings (h1-h6)</span>
+                            <span class="concept-tag">Paragraphs</span>
+                            <span class="concept-tag">Formatting (b, i, u)</span>
+                            <span class="concept-tag">Comments</span>
+                        </td>
+                        <td class="col-time">4 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">&lt;!DOCTYPE html&gt;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • My First Webpage<br>
+                                • Resume Header
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create a basic "Bio Data" page using headings and paragraphs.</td>
+                        <td class="col-assign">
+                            <ul>
+                                <li>Create "My City" page</li>
+                                <li>Use all 6 heading levels</li>
+                            </ul>
+                        </td>
+                        <td class="col-project" rowspan="3">Personal Portfolio</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">2</td>
+                        <td class="col-topic">HTML Media & Lists</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Images (src, alt)</span>
+                            <span class="concept-tag">Anchors (href, target)</span>
+                            <span class="concept-tag">Lists (ul, ol, li)</span>
+                            <span class="concept-tag">Favicon</span>
+                        </td>
+                        <td class="col-time">2 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">&lt;img src="..."&gt;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Image Gallery<br>
+                                • Navigation Menu
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create a "Top 5 Movies" list with posters.</td>
+                        <td class="col-assign">
+                            <ul>
+                                <li>Recipe page with ingredients</li>
+                                <li>Navigation menu links</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">3</td>
+                        <td class="col-topic">HTML Forms & Tables</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Form Tag</span>
+                            <span class="concept-tag">Inputs (text, email, pass)</span>
+                            <span class="concept-tag">Buttons</span>
+                            <span class="concept-tag">Table Structure (tr, td, th)</span>
+                        </td>
+                        <td class="col-time">5 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">&lt;form&gt;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Login Form<br>
+                                • Student Table
+                            </div>
+                        </td>
+                        <td class="col-classwork">Design a "Contact Us" form.</td>
+                        <td class="col-assign">
+                            <ul>
+                                <li>Student Registration Form</li>
+                                <li>Class Schedule Table</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">4</td>
+                        <td class="col-topic">CSS Basics</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Selectors (id, class)</span>
+                            <span class="concept-tag">Colors (hex, rgb)</span>
+                            <span class="concept-tag">Fonts</span>
+                            <span class="concept-tag">Backgrounds</span>
+                        </td>
+                        <td class="col-time">5 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">.btn { color: red; }</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Styled Buttons<br>
+                                • Card Design
+                            </div>
+                        </td>
+                        <td class="col-classwork">Style the Contact Form.</td>
+                        <td class="col-assign">Style the Portfolio.</td>
+                        <td class="col-project" rowspan="2">Landing Page</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">5</td>
+                        <td class="col-topic">CSS Layout</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Box Model</span>
+                            <span class="concept-tag">Flexbox</span>
+                            <span class="concept-tag">Grid Basics</span>
+                            <span class="concept-tag">Responsive (@media)</span>
+                        </td>
+                        <td class="col-time">8 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">display: flex;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Flexbox Navbar<br>
+                                • Grid Photo Album
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create a responsive Navbar.</td>
+                        <td class="col-assign">3-Column Pricing Layout.</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">6</td>
+                        <td class="col-topic">JS Fundamentals</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Variables (let, const)</span>
+                            <span class="concept-tag">Data Types</span>
+                            <span class="concept-tag">Operators</span>
+                            <span class="concept-tag">Conditionals</span>
+                        </td>
+                        <td class="col-time">8 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">let x = 10;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Find Square of Number<br>
+                                • Add 2 Numbers
+                            </div>
+                        </td>
+                        <td class="col-classwork">WAP to check Voting Age.</td>
+                        <td class="col-assign">Grade Calculator.</td>
+                        <td class="col-project" rowspan="2">Interactive Calc</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">7</td>
+                        <td class="col-topic">JS DOM</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Selection (getElementById)</span>
+                            <span class="concept-tag">Events (click, change)</span>
+                            <span class="concept-tag">Manipulation</span>
+                        </td>
+                        <td class="col-time">4 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">btn.onclick = ...</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Counter App<br>
+                                • Light/Dark Toggle
+                            </div>
+                        </td>
+                        <td class="col-classwork">Button click changes color.</td>
+                        <td class="col-assign">Form Validation.</td>
+                    </tr>
+                </tbody>
+
+                <!-- STAGE 2 HEADER -->
+                <tbody>
+                    <tr class="stage-row">
+                        <td colspan="8"><span class="stage-badge">Stage 2: Advanced Development</span></td>
+                    </tr>
+                </tbody>
+
+                <!-- REACT (COMMON) -->
+                <tbody>
+                    <tr>
+                        <td class="col-sr">8</td>
+                        <td class="col-topic">React Basics</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">JSX</span>
+                            <span class="concept-tag">Components</span>
+                            <span class="concept-tag">Props</span>
+                            <span class="concept-tag">State (useState)</span>
+                        </td>
+                        <td class="col-time">8 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">&lt;Card title="Hi" /&gt;</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Hello World Component<br>
+                                • Counter with State
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create a Profile Card.</td>
+                        <td class="col-assign">Product Gallery.</td>
+                        <td class="col-project" rowspan="2">Movie App</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">9</td>
+                        <td class="col-topic">React Advanced</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">useEffect</span>
+                            <span class="concept-tag">API Calls</span>
+                            <span class="concept-tag">Routing</span>
+                            <span class="concept-tag">Context API</span>
+                        </td>
+                        <td class="col-time">10 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">fetch('/api')</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • User List from API<br>
+                                • Theme Context
+                            </div>
+                        </td>
+                        <td class="col-classwork">Fetch and display Users.</td>
+                        <td class="col-assign">Routing for Pages.</td>
+                    </tr>
+                </tbody>
+
+                <!-- NODE TRACK -->
+                <tbody id="track-node" class="track-body active">
+                    <tr>
+                        <td class="col-sr">10</td>
+                        <td class="col-topic">Node.js & Express</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Modules</span>
+                            <span class="concept-tag">Express App</span>
+                            <span class="concept-tag">Routing</span>
+                            <span class="concept-tag">Middleware</span>
+                        </td>
+                        <td class="col-time">10 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">app.get('/', ...)</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Hello World API<br>
+                                • User CRUD Routes
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create Basic API.</td>
+                        <td class="col-assign">Logger Middleware.</td>
+                        <td class="col-project" rowspan="2">E-Commerce API</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">11</td>
+                        <td class="col-topic">MySQL Advanced</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Joins (Inner, Left)</span>
+                            <span class="concept-tag">Normalization</span>
+                            <span class="concept-tag">Stored Procs</span>
+                            <span class="concept-tag">Triggers</span>
+                        </td>
+                        <td class="col-time">6 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">SELECT JOIN...</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Customer Orders Query<br>
+                                • Employee Salary Proc
+                            </div>
+                        </td>
+                        <td class="col-classwork">Join User & Orders.</td>
+                        <td class="col-assign">Sales Report Query.</td>
+                    </tr>
+                </tbody>
+
+                <!-- JAVA TRACK -->
+                <tbody id="track-java" class="track-body">
+                    <tr>
+                        <td class="col-sr">10</td>
+                        <td class="col-topic">Core Java</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Classes & Objects</span>
+                            <span class="concept-tag">Inheritance</span>
+                            <span class="concept-tag">Polymorphism</span>
+                            <span class="concept-tag">Collections</span>
+                        </td>
+                        <td class="col-time">12 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">class Dog extends Animal</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Area of Circle<br>
+                                • Even/Odd Check
+                            </div>
+                        </td>
+                        <td class="col-classwork">Bank Account System.</td>
+                        <td class="col-assign">Student Library.</td>
+                        <td class="col-project" rowspan="2">Spring Boot API</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">11</td>
+                        <td class="col-topic">Spring Boot</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Dependency Injection</span>
+                            <span class="concept-tag">JPA / Hibernate</span>
+                            <span class="concept-tag">REST Controllers</span>
+                            <span class="concept-tag">Security</span>
+                        </td>
+                        <td class="col-time">12 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">@Autowired</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Hello World Controller<br>
+                                • User Entity & Repo
+                            </div>
+                        </td>
+                        <td class="col-classwork">Create User API.</td>
+                        <td class="col-assign">Secure Login API.</td>
+                    </tr>
+                </tbody>
+
+                <!-- PYTHON TRACK -->
+                <tbody id="track-python" class="track-body">
+                    <tr>
+                        <td class="col-sr">10</td>
+                        <td class="col-topic">Core Python</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Lists/Dicts</span>
+                            <span class="concept-tag">Functions</span>
+                            <span class="concept-tag">Classes (OOP)</span>
+                            <span class="concept-tag">Modules</span>
+                        </td>
+                        <td class="col-time">10 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">def my_func():</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Factorial Program<br>
+                                • Fibonacci Series
+                            </div>
+                        </td>
+                        <td class="col-classwork">Data Analysis Script.</td>
+                        <td class="col-assign">Inventory Class.</td>
+                        <td class="col-project" rowspan="2">Flask API</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">11</td>
+                        <td class="col-topic">Flask Web</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Routes</span>
+                            <span class="concept-tag">Templates (Jinja2)</span>
+                            <span class="concept-tag">SQLAlchemy</span>
+                            <span class="concept-tag">Blueprints</span>
+                        </td>
+                        <td class="col-time">10 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">@app.route</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Home Page Route<br>
+                                • User Login Logic
+                            </div>
+                        </td>
+                        <td class="col-classwork">Blog Backend.</td>
+                        <td class="col-assign">User Auth System.</td>
+                    </tr>
+                </tbody>
+
+                <!-- STAGE 3 & 4 (Simplified for brevity but follows same pattern) -->
+                <tbody>
+                    <tr class="stage-row">
+                        <td colspan="8"><span class="stage-badge">Stage 3 & 4: Pro Stack & DevOps</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">12</td>
+                        <td class="col-topic">Full Stack</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Redux Toolkit</span>
+                            <span class="concept-tag">Axios Integration</span>
+                            <span class="concept-tag">CORS</span>
+                            <span class="concept-tag">JWT Handling</span>
+                        </td>
+                        <td class="col-time">20 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">dispatch(login())</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Auth Flow Integration<br>
+                                • Product Search
+                            </div>
+                        </td>
+                        <td class="col-classwork">Connect Login UI to API.</td>
+                        <td class="col-assign">Shopping Cart Logic.</td>
+                        <td class="col-project">Capstone App</td>
+                    </tr>
+                    <tr>
+                        <td class="col-sr">13</td>
+                        <td class="col-topic">DevOps</td>
+                        <td class="col-concepts">
+                            <span class="concept-tag">Docker</span>
+                            <span class="concept-tag">CI/CD Pipelines</span>
+                            <span class="concept-tag">AWS/Vercel</span>
+                        </td>
+                        <td class="col-time">8 Hours</td>
+                        <td class="col-example">
+                            <span class="code-snippet">docker build .</span>
+                            <div style="font-size: 0.85em; margin-top: 4px; color: var(--text-example);">
+                                • Dockerfile for Node<br>
+                                • GitHub Actions YAML
+                            </div>
+                        </td>
+                        <td class="col-classwork">Dockerize the App.</td>
+                        <td class="col-assign">Deploy to Cloud.</td>
+                        <td class="col-project">Live Deployment</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function switchTrack(trackName) {
+            // Hide all track bodies
+            document.querySelectorAll('.track-body').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show selected track body
+            document.getElementById('track-' + trackName).classList.add('active');
+
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Find the button that was clicked
+            const buttons = document.querySelectorAll('.tab-btn');
+            for (let btn of buttons) {
+                if (btn.textContent.toLowerCase().includes(trackName)) {
+                    btn.classList.add('active');
+                }
+            }
+        }
+
+        // Add data-label attributes for mobile responsiveness
+        document.addEventListener('DOMContentLoaded', function () {
+            const headers = ['#', 'Topic', 'Concepts to Cover', 'Time', 'Example Program', 'Class Work', 'Assignment', 'Project'];
+            const rows = document.querySelectorAll('tbody tr:not(.stage-row)');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach((cell, index) => {
+                    if (index < headers.length) {
+                        cell.setAttribute('data-label', headers[index]);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
