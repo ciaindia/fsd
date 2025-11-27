@@ -239,18 +239,25 @@
         }
 
         tbody tr {
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* Light border for inner rows */
+            transition: background 0.3s ease;
+        }
+
+        tbody tr.stage-end {
+            border-bottom: 2px solid var(--border-color);
+            /* Strong border for stage separation */
         }
 
         tbody tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.08);
+            /* Removed transform to prevent visual breaking with rowspan cells */
         }
 
         td {
             padding: 1.2rem 1rem;
-            vertical-align: top;
+            vertical-align: middle;
+            /* Changed from top to middle for better merged cell appearance */
         }
 
         .col-stage {
@@ -466,7 +473,7 @@
     <div class="container">
         <header>
             <h1>Course Syllabus</h1>
-            <p class="subtitle">Dynamic Learning Tracks - Powered by Google Sheets</p>
+            <p class="subtitle">Dynamic Learning Tracks - Created by CIA TP</p>
         </header>
 
         <div id="loading" class="loading">
@@ -565,7 +572,6 @@
 
     <!-- Include Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
     <script>
         // Tab Switching
         function switchTab(track) {
@@ -591,7 +597,7 @@
 
         async function loadSheetData() {
             // Default Configuration
-            let sheetId = "1bi3le-MXoH0qMqaQrII0uMzzEQVjD7_qsBqgwXOVnQs";
+            let sheetId = "1y4zX3RmfBIdfVSM2FPfXlzdFGfOkye4XvivY9spj2sI";
             let sheetName = "Sheet1";
 
             // Parse URL Parameters
@@ -622,19 +628,39 @@
 
                 const rows = json.table.rows;
 
-                // Parse into JS objects
-                let data = rows.map(r => ({
-                    stage: r.c[0]?.v || "",
-                    sr: r.c[1]?.v || "",
-                    topic: r.c[2]?.v || "",
-                    concepts: r.c[3]?.v || "",
-                    time: r.c[4]?.v || "",
-                    example: r.c[5]?.v || "",
-                    classwork: r.c[6]?.v || "",
-                    assignment: r.c[7]?.v || "",
-                    project: r.c[8]?.v || "",
-                    track: (r.c[9]?.v || "").toLowerCase()
-                }));
+                // Parse into JS objects with Fill-Down logic for Stage and Project
+                let lastStage = "";
+                let lastProject = "";
+
+                let data = rows.map(r => {
+                    let rawStage = r.c[0]?.v || "";
+                    let rawProject = r.c[8]?.v || "";
+
+                    // Stage Fill-Down
+                    if (rawStage) {
+                        lastStage = rawStage;
+                        // Reset project when a new stage block starts (prevent bleeding)
+                        lastProject = "";
+                    }
+
+                    // Project Fill-Down
+                    if (rawProject) {
+                        lastProject = rawProject;
+                    }
+
+                    return {
+                        stage: lastStage,
+                        sr: r.c[1]?.v || "",
+                        topic: r.c[2]?.v || "",
+                        concepts: r.c[3]?.v || "",
+                        time: r.c[4]?.v || "",
+                        example: r.c[5]?.v || "",
+                        classwork: r.c[6]?.v || "",
+                        assignment: r.c[7]?.v || "",
+                        project: lastProject, // Use the filled-down project
+                        track: (r.c[9]?.v || "").toLowerCase()
+                    };
+                });
 
                 console.log("Loaded Google Sheet:", data);
 
@@ -652,6 +678,8 @@
             }
         }
 
+
+
         function renderDynamicTable(data) {
             // Clear all track tbody containers
             const nodeBody = document.getElementById("track-node");
@@ -666,8 +694,12 @@
             const stages = {};
 
             data.forEach(row => {
-                // Skip header row or empty rows
-                if (!row.sr || row.sr === "Sr") return;
+                // Skip header row
+                if (row.sr === "Sr") return;
+
+                // Skip completely empty rows (must have Topic or Sr to be valid)
+                // We check topic/sr because stage/project might be filled down
+                if (!row.topic && !row.sr) return;
 
                 const stage = row.stage || "Other";
                 if (!stages[stage]) {
@@ -680,22 +712,64 @@
             Object.keys(stages).forEach(stageName => {
                 const stageRows = stages[stageName];
 
-                stageRows.forEach(row => {
-                    // Create table row for each track
-                    const createRow = () => {
+                // Helper to render a list of rows for a specific tbody
+                const renderRowsToBody = (rows, tbody) => {
+                    if (rows.length === 0) return;
+
+                    const totalRows = rows.length;
+
+                    // Pre-calculate Project Rowspans
+                    // We create a map of { index: { rowspan: 1, hidden: false } }
+                    const projectSpans = rows.map(() => ({ rowspan: 1, hidden: false }));
+
+                    for (let i = 0; i < rows.length; i++) {
+                        if (projectSpans[i].hidden) continue;
+
+                        const currentProject = rows[i].project;
+                        if (!currentProject) continue; // Don't merge empty projects
+
+                        for (let j = i + 1; j < rows.length; j++) {
+                            if (rows[j].project === currentProject) {
+                                projectSpans[i].rowspan++;
+                                projectSpans[j].hidden = true;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    rows.forEach((row, index) => {
                         const tr = document.createElement("tr");
+
+                        // Add class for the last row in the stage group for styling
+                        if (index === totalRows - 1) {
+                            tr.classList.add("stage-end");
+                        }
 
                         // Add styling for common topics
                         if (row.track === "common") {
                             tr.classList.add("common-row");
                         }
 
-                        // Get stage badge class
-                        const stageClass = `stage-${row.stage}`;
-                        const stageBadge = `<span class="stage-badge ${stageClass}">Stage ${row.stage}</span>`;
+                        // Stage Cell Logic
+                        let stageCellHTML = '';
+                        if (index === 0) {
+                            // Get stage badge class
+                            const stageClass = `stage-${row.stage}`;
+                            const stageBadge = `<span class="stage-badge ${stageClass}">Stage ${row.stage}</span>`;
+                            stageCellHTML = `<td class="col-stage" rowspan="${totalRows}">${stageBadge}</td>`;
+                        }
+
+                        // Project Cell Logic
+                        let projectCellHTML = '';
+                        const spanData = projectSpans[index];
+                        if (!spanData.hidden) {
+                            const rowspanAttr = spanData.rowspan > 1 ? ` rowspan="${spanData.rowspan}"` : '';
+                            projectCellHTML = `<td class="col-project"${rowspanAttr}>${row.project}</td>`;
+                        }
 
                         tr.innerHTML = `
-                        <td class="col-stage">${stageBadge}</td>
+                        ${stageCellHTML}
                         <td class="col-sr">${row.sr}</td>
                         <td class="col-topic">${row.topic}</td>
                         <td class="col-concepts">${formatConcepts(row.concepts)}</td>
@@ -703,33 +777,28 @@
                         <td class="col-example">${formatMultiline(row.example)}</td>
                         <td class="col-classwork">${row.classwork}</td>
                         <td class="col-assign">${row.assignment}</td>
-                        <td class="col-project">${row.project}</td>
+                        ${projectCellHTML}
                     `;
-                        return tr;
-                    };
+                        tbody.appendChild(tr);
+                    });
+                };
 
-                    // Add to appropriate track(s)
-                    if (row.track === "common") {
-                        // Common topics go to all tracks
-                        nodeBody.appendChild(createRow());
-                        javaBody.appendChild(createRow());
-                        pythonBody.appendChild(createRow());
-                    } else if (row.track === "node") {
-                        nodeBody.appendChild(createRow());
-                    } else if (row.track === "java") {
-                        javaBody.appendChild(createRow());
-                    } else if (row.track === "python") {
-                        pythonBody.appendChild(createRow());
-                    }
-                });
+                // Filter rows for each track
+                const nodeRows = stageRows.filter(r => r.track === 'node' || r.track === 'common');
+                const javaRows = stageRows.filter(r => r.track === 'java' || r.track === 'common');
+                const pythonRows = stageRows.filter(r => r.track === 'python' || r.track === 'common');
+
+                renderRowsToBody(nodeRows, nodeBody);
+                renderRowsToBody(javaRows, javaBody);
+                renderRowsToBody(pythonRows, pythonBody);
             });
 
-            console.log("Dynamic table rendered with common topics!");
+            console.log("Dynamic table rendered with merged stages and projects!");
         }
 
         function updateStats(data) {
-            // Filter out header rows
-            const validData = data.filter(row => row.sr && row.sr !== "Sr");
+            // Filter out header rows and empty rows (must have Topic or Sr)
+            const validData = data.filter(row => (row.sr || row.topic) && row.sr !== "Sr");
 
             // Total topics
             document.getElementById('total-topics').textContent = validData.length;
@@ -750,14 +819,46 @@
             ).join(" ");
         }
 
-        // Convert ; separated examples → code blocks
+        // Convert ;; separated items with special formatting support
         function formatMultiline(str) {
             if (!str) return "";
+
             return str
-                .split(";")
-                .map(x => `<span class="code-snippet">${x.trim()}</span>`)
+                .split(";;")   // <-- using double semicolon as separator
+                .map(item => {
+                    item = item.trim();
+                    if (!item) return "";
+
+                    // Special formatting tokens
+                    if (item.startsWith("h1:")) {
+                        const txt = item.substring(3).trim();
+                        return `<h3 style="margin: 0.5rem 0; font-size: 1rem; font-weight: 700; color: var(--text-primary);">${txt}</h3>`;
+                    }
+
+                    if (item.startsWith("h2:")) {
+                        const txt = item.substring(3).trim();
+                        return `<h4 style="margin: 0.4rem 0; font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">${txt}</h4>`;
+                    }
+
+                    if (item === "br") {
+                        return "<br>";
+                    }
+
+                    if (item === "hr") {
+                        return `<hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--border-color);">`;
+                    }
+
+                    if (item.startsWith("ul:")) {
+                        const list = item.substring(3).split("|").map(li => `<li>${li.trim()}</li>`).join("");
+                        return `<ul style="margin: 0.3rem 0 0.3rem 1.5rem; padding: 0;">${list}</ul>`;
+                    }
+
+                    // Default → show as code snippet
+                    return `<span class="code-snippet">${item}</span>`;
+                })
                 .join("<br>");
         }
+
 
         // Auto-run on load
         document.addEventListener("DOMContentLoaded", loadSheetData);
