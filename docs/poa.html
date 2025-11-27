@@ -853,8 +853,14 @@
                         return `<ul style="margin: 0.3rem 0 0.3rem 1.5rem; padding: 0;">${list}</ul>`;
                     }
 
-                    // Default → show as code snippet
-                    return `<span class="code-snippet">${item}</span>`;
+                    // Default → show as code snippet (escape HTML to display as text)
+                    const escaped = item
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+                    return `<span class="code-snippet">${escaped}</span>`;
                 })
                 .join("<br>");
         }
