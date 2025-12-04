@@ -69,6 +69,12 @@
             margin-bottom: 15px;
         }
         
+        h4 {
+            color: #2d3748;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
         .description {
             background: #f7fafc;
             padding: 25px;
@@ -151,6 +157,11 @@
         
         .badge.github {
             background: #24292e;
+            color: white;
+        }
+        
+        .badge.pr {
+            background: #0366d6;
             color: white;
         }
         
@@ -237,6 +248,19 @@
             color: #2c5282;
             margin-top: 0;
         }
+
+        .success-box {
+            background: #f0fff4;
+            border-left: 5px solid #48bb78;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .success-box h3 {
+            color: #22543d;
+            margin-top: 0;
+        }
         
         .troubleshoot-item {
             background: white;
@@ -251,16 +275,30 @@
             border-color: #667eea;
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
-        
-        .troubleshoot-item h4 {
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-        
+
         .solution {
             color: #2f855a;
             font-weight: bold;
             margin-top: 10px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .role-badge.developer {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .role-badge.maintainer {
+            background: #feebc8;
+            color: #7c2d12;
         }
         
         @media (max-width: 768px) {
@@ -282,7 +320,7 @@
     <div class="container">
         <header>
             <h1>🔄 Development Architecture</h1>
-            <p class="subtitle">GitHub-Based CI/CD Workflow with Jenkins</p>
+            <p class="subtitle">GitHub Pull Request Workflow with Jenkins CI/CD</p>
         </header>
         
         <div class="content">
@@ -303,23 +341,22 @@
                             </div>
                         </li>
                         <li><strong>GitHub Account:</strong> Each developer needs a GitHub account (https://github.com/signup)</li>
-                        <li><strong>Repository Access:</strong> All developers must have appropriate permissions (write access) to the repository</li>
-                        <li><strong>SSH Keys Setup:</strong> Configure SSH keys for secure authentication
-                            <div class="code-block">
-                                # Generate SSH key<br>
-                                <code>ssh-keygen -t ed25519 -C "your_email@example.com"</code><br><br>
-                                # Add SSH key to GitHub account<br>
-                                # Copy the public key and add it to GitHub → Settings → SSH Keys
-                            </div>
-                        </li>
+                        <li><strong>Repository Access:</strong> All developers must have write access permissions to the repository</li>
                         <li><strong>Git Configuration:</strong> Configure user name and email
                             <div class="code-block">
                                 <code>git config --global user.name "Your Name"</code><br>
                                 <code>git config --global user.email "your_email@example.com"</code>
                             </div>
                         </li>
-                        <li><strong>Jenkins Setup:</strong> Jenkins server configured with GitHub integration</li>
-                        <li><strong>Server Access:</strong> Appropriate permissions for UAT and Production servers</li>
+                        <li><strong>GitHub Personal Access Token:</strong> Create a token for HTTPS authentication
+                            <div class="code-block">
+                                # Generate token from:<br>
+                                # GitHub → Settings → Developer settings → Personal access tokens<br>
+                                # Select scopes: repo (full control of private repositories)<br><br>
+                                # Store credentials to avoid repeated login<br>
+                                <code>git config --global credential.helper store</code>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -328,11 +365,12 @@
             <div class="section">
                 <h2>📖 Overview</h2>
                 <div class="description">
-                    This architecture illustrates a comprehensive GitHub-based development workflow that supports multiple developers working simultaneously on frontend and backend components. The system uses Jenkins for continuous integration and rsync for deployment automation across UAT and production environments. The main branch (previously known as master) serves as the primary integration point.
+                    This architecture demonstrates a GitHub Pull Request-based workflow where developers work on their own branches, push changes using HTTPS, and create pull requests for code review. The maintainer reviews and merges changes through the GitHub portal. The system uses the dev branch for integration, main/master branch for releases, and Jenkins for automated deployment.
                 </div>
                 
                 <div class="environment-badges">
                     <span class="badge github">GitHub Repository</span>
+                    <span class="badge pr">Pull Requests</span>
                     <span class="badge jenkins">Jenkins CI/CD</span>
                     <span class="badge uat">UAT Environment</span>
                     <span class="badge production">Production Environment</span>
@@ -341,38 +379,62 @@
             
             <!-- Workflow Process -->
             <div class="section">
-                <h2>🔀 Workflow Process</h2>
+                <h2>🔀 Complete Workflow Process</h2>
                 <div class="workflow-steps">
                     <div class="step-card">
-                        <h3>1. Development Phase</h3>
+                        <h3>1. Clone Branch</h3>
                         <ul>
-                            <li>7 developers work on separate branches (dev1-dev7)</li>
-                            <li>Each developer works on their local PC</li>
-                            <li>Code includes /bend (backend) and /fend (frontend)</li>
-                            <li>Developers push changes to their branches</li>
-                            <li>Regular pulls to stay updated with dev branch</li>
+                            <li>Each developer clones their specific branch</li>
+                            <li>Use HTTPS URL for cloning</li>
+                            <li>Work on backend and frontend code</li>
                         </ul>
                     </div>
                     
                     <div class="step-card">
-                        <h3>2. Integration Phase</h3>
+                        <h3>2. Make Changes & Push</h3>
                         <ul>
-                            <li>All dev branches merge into 'dev' branch</li>
-                            <li>Conflict resolution happens here</li>
-                            <li>Dev branch syncs with 'main' branch</li>
-                            <li>Code review before merging to main</li>
-                            <li>Jenkins monitors repository changes</li>
+                            <li>Make code changes in local branch</li>
+                            <li>Commit with meaningful messages</li>
+                            <li>Push changes to GitHub</li>
                         </ul>
                     </div>
                     
                     <div class="step-card">
-                        <h3>3. Deployment Phase</h3>
+                        <h3>3. Create Pull Request</h3>
                         <ul>
-                            <li>Jenkins pulls latest code from main</li>
-                            <li>Code is rsynced to UAT environment</li>
-                            <li>After UAT approval, rsync to production</li>
-                            <li>Excludes files via .gitignore and .releaseignore</li>
-                            <li>Rollback plan in case of issues</li>
+                            <li>Go to GitHub repository</li>
+                            <li>Create PR from your branch to dev</li>
+                            <li>Add description of changes</li>
+                            <li>Submit for review</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>4. Code Review</h3>
+                        <ul>
+                            <li>Maintainer reviews PR on GitHub</li>
+                            <li>Reviews code changes and comments</li>
+                            <li>Developer addresses feedback</li>
+                            <li>Maintainer approves when satisfied</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>5. Merge to Dev</h3>
+                        <ul>
+                            <li>Maintainer merges PR</li>
+                            <li>Changes merged to dev branch</li>
+                            <li>Optional: Delete feature branch</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>6. Release Process</h3>
+                        <ul>
+                            <li>Create PR: dev to main</li>
+                            <li>Final review of all changes</li>
+                            <li>Merge to main/master</li>
+                            <li>Jenkins auto-deploys</li>
                         </ul>
                     </div>
                 </div>
@@ -384,55 +446,58 @@
                 <div class="mermaid-container">
                     <div class="mermaid">
 graph TB
-    subgraph Developers["👥 Development Team"]
-        DEV1[DEV PC 1<br/>Branch: dev1]
-        DEV2[DEV PC 2<br/>Branch: dev2]
-        DEV3[DEV PC 3<br/>Branch: dev3]
-        DEV4[DEV PC 4<br/>Branch: dev4]
-        DEV5[DEV PC 5<br/>Branch: dev5]
-        DEV6[DEV PC 6<br/>Branch: dev6]
-        DEV7[DEV PC 7<br/>Branch: dev7]
+    subgraph Developers["Development Team - Clone Own Branches via HTTPS"]
+        DEV1[DEV PC 1<br/>git clone -b dev1<br/>https://github.com/org/project]
+        DEV2[DEV PC 2<br/>dev2 branch]
+        DEV3[DEV PC 3<br/>dev3 branch]
+        DEV4[DEV PC 4<br/>dev4 branch]
+        DEV5[DEV PC 5<br/>dev5 branch]
+        DEV6[DEV PC 6<br/>dev6 branch]
+        DEV7[DEV PC 7<br/>dev7 branch]
     end
     
-    subgraph GitHub["🐙 GitHub Repository"]
-        DEV_BRANCH[Dev Branch<br/>/bend /fend<br/>/docs]
-        MAIN[Main Branch<br/>/bend /fend<br/>/docs<br/>.gitignore<br/>.releaseignore]
+    subgraph GitHub["GitHub Repository"]
+        BRANCHES[Individual Branches<br/>dev1, dev2, dev3, dev4<br/>dev5, dev6, dev7]
+        DEV_BRANCH[Dev Branch<br/>Integration Branch]
+        MAIN[Main/Master Branch<br/>Production Code]
+    end
+
+    subgraph PRProcess["Pull Request Process"]
+        PRS[Pull Requests<br/>dev1→dev, dev2→dev, etc.]
+        REVIEW[Maintainer<br/>Review & Approve]
+        PR_RELEASE[Pull Request<br/>dev → main]
     end
     
-    subgraph CI["🔧 CI/CD Pipeline"]
-        JENKINS[Jenkins<br/>Continuous Integration]
+    subgraph CI["CI/CD Pipeline"]
+        JENKINS[Jenkins<br/>Auto Deploy on Merge]
     end
     
-    subgraph Environments["🌐 Deployment Environments"]
+    subgraph Environments["Deployment Environments"]
         UAT[UAT Environment<br/>/bend /fend]
-        PROD[Production Environment<br/>/bend /fend]
+        PROD[Production<br/>/bend /fend]
     end
     
-    DEV1 -->|PUSH| DEV_BRANCH
-    DEV2 -->|PUSH| DEV_BRANCH
-    DEV3 -->|PUSH| DEV_BRANCH
-    DEV4 -->|PUSH| DEV_BRANCH
-    DEV5 -->|PUSH| DEV_BRANCH
-    DEV6 -->|PUSH| DEV_BRANCH
-    DEV7 -->|PUSH| DEV_BRANCH
+    DEV1 -->|PUSH via HTTPS| BRANCHES
+    DEV2 -->|PUSH via HTTPS| BRANCHES
+    DEV3 -->|PUSH via HTTPS| BRANCHES
+    DEV4 -->|PUSH via HTTPS| BRANCHES
+    DEV5 -->|PUSH via HTTPS| BRANCHES
+    DEV6 -->|PUSH via HTTPS| BRANCHES
+    DEV7 -->|PUSH via HTTPS| BRANCHES
     
-    DEV_BRANCH -->|MERGE| MAIN
-    MAIN -->|RSYNC| DEV_BRANCH
+    BRANCHES -->|Create PR| PRS
+    PRS -->|Review| REVIEW
+    REVIEW -->|Merge| DEV_BRANCH
+    DEV_BRANCH -->|Create PR| PR_RELEASE
+    PR_RELEASE -->|Merge| MAIN
     
-    MAIN -->|PULL| JENKINS
+    MAIN -->|Webhook| JENKINS
     JENKINS -->|RSYNC| UAT
     UAT -->|RSYNC| PROD
     
-    DEV1 -.->|PULL| DEV_BRANCH
-    DEV2 -.->|PULL| DEV_BRANCH
-    DEV3 -.->|PULL| DEV_BRANCH
-    DEV4 -.->|PULL| DEV_BRANCH
-    DEV5 -.->|PULL| DEV_BRANCH
-    DEV6 -.->|PULL| DEV_BRANCH
-    DEV7 -.->|PULL| DEV_BRANCH
-    
     style DEV_BRANCH fill:#4299e1,stroke:#2b6cb0,stroke-width:3px,color:#fff
     style MAIN fill:#48bb78,stroke:#2f855a,stroke-width:3px,color:#fff
+    style REVIEW fill:#9f7aea,stroke:#6b46c1,stroke-width:3px,color:#fff
     style JENKINS fill:#ed8936,stroke:#c05621,stroke-width:3px,color:#fff
     style UAT fill:#f6ad55,stroke:#dd6b20,stroke-width:3px,color:#fff
     style PROD fill:#68d391,stroke:#38a169,stroke-width:3px,color:#fff
@@ -440,217 +505,148 @@ graph TB
                 </div>
             </div>
 
-            <!-- Troubleshooting Section -->
+            <!-- Step by Step Developer Guide -->
             <div class="section">
-                <h2>🔧 Troubleshooting Common Push Issues</h2>
+                <h2>📚 Developer Guide - Step by Step</h2>
                 
-                <div class="troubleshoot-item">
-                    <h4>❌ Error: "Permission denied (publickey)"</h4>
-                    <p><strong>Cause:</strong> SSH key not configured properly or not added to GitHub account.</p>
-                    <div class="solution">Solution:</div>
+                <div class="success-box">
+                    <h3>Step 1: Clone Your Branch</h3>
                     <div class="code-block">
-                        # Test SSH connection<br>
-                        <code>ssh -T git@github.com</code><br><br>
-                        # If fails, add SSH key to ssh-agent<br>
-                        <code>eval "$(ssh-agent -s)"</code><br>
-                        <code>ssh-add ~/.ssh/id_ed25519</code><br><br>
-                        # Add the public key to GitHub (Settings → SSH Keys)
+                        # Clone your specific branch using HTTPS<br>
+                        <code>git clone -b dev1 https://github.com/organization/anyproject</code><br><br>
+                        
+                        # Navigate to directory<br>
+                        <code>cd anyproject</code><br><br>
+                        
+                        # Verify branch<br>
+                        <code>git branch</code>
                     </div>
                 </div>
 
-                <div class="troubleshoot-item">
-                    <h4>❌ Error: "Failed to push some refs"</h4>
-                    <p><strong>Cause:</strong> Remote repository has changes that you don't have locally.</p>
-                    <div class="solution">Solution:</div>
+                <div class="success-box">
+                    <h3>Step 2: Make Changes and Commit</h3>
                     <div class="code-block">
-                        # Pull the latest changes first<br>
-                        <code>git pull origin dev1</code><br><br>
-                        # Resolve any conflicts if they occur<br>
-                        # Then push again<br>
-                        <code>git push origin dev1</code>
-                    </div>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>❌ Error: "Repository not found"</h4>
-                    <p><strong>Cause:</strong> Incorrect repository URL or lack of access permissions.</p>
-                    <div class="solution">Solution:</div>
-                    <div class="code-block">
-                        # Check current remote URL<br>
-                        <code>git remote -v</code><br><br>
-                        # Update remote URL if incorrect<br>
-                        <code>git remote set-url origin git@github.com:username/repo.git</code><br><br>
-                        # Verify access with repository owner
-                    </div>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>❌ Error: "Large file detected"</h4>
-                    <p><strong>Cause:</strong> Trying to push files larger than GitHub's limit (100MB).</p>
-                    <div class="solution">Solution:</div>
-                    <div class="code-block">
-                        # Use Git LFS for large files<br>
-                        <code>git lfs install</code><br>
-                        <code>git lfs track "*.psd"</code><br>
-                        <code>git add .gitattributes</code><br><br>
-                        # Or add large files to .gitignore
-                    </div>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>❌ Error: "Authentication failed"</h4>
-                    <p><strong>Cause:</strong> Incorrect credentials or token expired.</p>
-                    <div class="solution">Solution:</div>
-                    <div class="code-block">
-                        # For HTTPS, use Personal Access Token (not password)<br>
-                        # Generate token: GitHub → Settings → Developer settings → Personal access tokens<br><br>
-                        # Store credentials<br>
-                        <code>git config --global credential.helper store</code><br><br>
-                        # Or switch to SSH authentication (recommended)
-                    </div>
-                </div>
-            </div>
-
-            <!-- Conflict Resolution Section -->
-            <div class="section">
-                <h2>⚔️ Handling Merge Conflicts - Best Practices</h2>
-                
-                <div class="info-box">
-                    <h3>Understanding Merge Conflicts</h3>
-                    <p>Merge conflicts occur when two branches have made different changes to the same line of code, or when one branch deletes a file that another branch has modified. Git cannot automatically determine which change should take precedence.</p>
-                </div>
-
-                <h3>Step-by-Step Conflict Resolution Process</h3>
-
-                <div class="troubleshoot-item">
-                    <h4>Step 1: Pull Latest Changes</h4>
-                    <div class="code-block">
-                        # Always pull before starting work<br>
-                        <code>git checkout dev1</code><br>
-                        <code>git pull origin dev</code>
-                    </div>
-                    <p>This helps identify conflicts early, before you've made too many changes.</p>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>Step 2: Identify Conflicted Files</h4>
-                    <div class="code-block">
-                        # Git will show conflicted files<br>
+                        # Check status<br>
                         <code>git status</code><br><br>
-                        # Look for files marked as "both modified"
-                    </div>
-                    <p>Conflicted files will contain conflict markers in the code.</p>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>Step 3: Open and Review Conflicts</h4>
-                    <p>Conflict markers look like this:</p>
-                    <div class="code-block">
-                        &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (Your changes)<br>
-                        const apiUrl = "https://new-api.example.com";<br>
-                        =======<br>
-                        const apiUrl = "https://old-api.example.com";<br>
-                        &gt;&gt;&gt;&gt;&gt;&gt;&gt; dev (Incoming changes)
-                    </div>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>Step 4: Resolve the Conflict</h4>
-                    <p><strong>Choose one of these strategies:</strong></p>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>Keep your changes:</strong> Remove the conflict markers and keep the code between HEAD and =======</li>
-                        <li><strong>Keep incoming changes:</strong> Remove the conflict markers and keep the code between ======= and the branch name</li>
-                        <li><strong>Keep both changes:</strong> Merge both pieces of code logically</li>
-                        <li><strong>Write new code:</strong> Sometimes neither version is correct; write a new solution</li>
-                    </ul>
-                    <div class="code-block" style="margin-top: 15px;">
-                        # After resolving, the file should look clean:<br>
-                        const apiUrl = "https://new-api.example.com"; // Chosen solution
-                    </div>
-                </div>
-
-                <div class="troubleshoot-item">
-                    <h4>Step 5: Mark as Resolved and Commit</h4>
-                    <div class="code-block">
-                        # Add the resolved files<br>
-                        <code>git add &lt;resolved-file&gt;</code><br><br>
-                        # Or add all resolved files<br>
+                        
+                        # Add files<br>
                         <code>git add .</code><br><br>
-                        # Commit the merge<br>
-                        <code>git commit -m "Resolved merge conflicts between dev1 and dev"</code><br><br>
-                        # Push the changes<br>
+                        
+                        # Commit<br>
+                        <code>git commit -m "Added new feature"</code>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>Step 3: Push to GitHub</h3>
+                    <div class="code-block">
+                        # Push changes<br>
+                        <code>git push origin dev1</code><br><br>
+                        
+                        # First time: enter username and Personal Access Token
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>Step 4: Create Pull Request</h3>
+                    <p>On GitHub web interface:</p>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Go to repository on GitHub</li>
+                        <li>Click "Pull requests" tab</li>
+                        <li>Click "New pull request"</li>
+                        <li>Set base: dev, compare: dev1</li>
+                        <li>Add title and description</li>
+                        <li>Click "Create pull request"</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Maintainer Guide -->
+            <div class="section">
+                <h2>👨‍💼 Maintainer Guide</h2>
+                
+                <div class="success-box">
+                    <h3>Review and Merge Pull Requests</h3>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Go to repository Pull requests tab</li>
+                        <li>Click on PR to review</li>
+                        <li>Review "Files changed" tab</li>
+                        <li>Add comments if needed</li>
+                        <li>Click "Review changes"</li>
+                        <li>Select "Approve" or "Request changes"</li>
+                        <li>Click "Merge pull request" when ready</li>
+                        <li>Confirm merge</li>
+                    </ol>
+                </div>
+
+                <div class="success-box">
+                    <h3>Release to Production</h3>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Create new PR: dev → main</li>
+                        <li>Review all accumulated changes</li>
+                        <li>Add release notes</li>
+                        <li>Merge to main branch</li>
+                        <li>Jenkins auto-deploys to UAT then Production</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="section">
+                <h2>🔧 Troubleshooting</h2>
+                
+                <div class="troubleshoot-item">
+                    <h4>❌ Authentication Failed</h4>
+                    <p><strong>Problem:</strong> Cannot push due to authentication error</p>
+                    <div class="solution">Solution:</div>
+                    <p>Use Personal Access Token instead of password</p>
+                    <div class="code-block">
+                        # Create token: GitHub → Settings → Developer settings<br>
+                        # → Personal access tokens → Generate new token<br>
+                        # Use token as password when pushing
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h4>❌ Failed to Push - Remote has Changes</h4>
+                    <p><strong>Problem:</strong> Remote branch has updates you don't have</p>
+                    <div class="solution">Solution:</div>
+                    <div class="code-block">
+                        <code>git pull origin dev1</code><br>
+                        # Resolve conflicts if any<br>
                         <code>git push origin dev1</code>
                     </div>
                 </div>
 
-                <div class="warning-box">
-                    <h3>⚠️ Important Tips for Conflict Resolution</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
-                        <li><strong>Test after resolving:</strong> Always test your code after resolving conflicts to ensure nothing broke</li>
-                        <li><strong>Communicate with team:</strong> If unsure which change to keep, discuss with the other developer</li>
-                        <li><strong>Never blindly accept all changes:</strong> Review each conflict carefully</li>
-                        <li><strong>Use merge tools:</strong> Consider using VS Code, GitKraken, or other merge tools for visual conflict resolution</li>
-                        <li><strong>Commit frequently:</strong> Smaller, frequent commits lead to fewer and simpler conflicts</li>
-                        <li><strong>Pull regularly:</strong> Pull from the dev branch daily to stay synchronized</li>
-                    </ul>
-                </div>
-
-                <h3>Using VS Code for Conflict Resolution</h3>
-                <div class="info-box">
-                    <p>VS Code provides a visual interface for resolving conflicts:</p>
-                    <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
-                        <li>Click "Accept Current Change" to keep your version</li>
-                        <li>Click "Accept Incoming Change" to accept the other version</li>
-                        <li>Click "Accept Both Changes" to keep both versions</li>
-                        <li>Manually edit the code to create a custom solution</li>
-                    </ul>
-                </div>
-
-                <h3>Avoiding Conflicts - Prevention Strategies</h3>
                 <div class="troubleshoot-item">
-                    <h4>Best Practices to Minimize Conflicts</h4>
-                    <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
-                        <li><strong>Coordinate work:</strong> Assign different files/modules to different developers</li>
-                        <li><strong>Pull before push:</strong> Always pull the latest changes before pushing</li>
-                        <li><strong>Frequent integration:</strong> Merge your branch into dev regularly</li>
-                        <li><strong>Small commits:</strong> Make small, focused commits rather than large ones</li>
-                        <li><strong>Code reviews:</strong> Review code before merging to catch potential conflicts</li>
-                        <li><strong>Communication:</strong> Inform team members when working on shared files</li>
-                        <li><strong>Feature branches:</strong> Use separate branches for separate features</li>
-                    </ul>
+                    <h4>❌ Merge Conflicts</h4>
+                    <p><strong>Problem:</strong> Conflicts when pulling or merging</p>
+                    <div class="solution">Solution:</div>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Open conflicted files</li>
+                        <li>Look for conflict markers (&lt;&lt;&lt; === &gt;&gt;&gt;)</li>
+                        <li>Choose which code to keep</li>
+                        <li>Remove conflict markers</li>
+                        <li>git add . && git commit</li>
+                        <li>git push origin dev1</li>
+                    </ol>
                 </div>
             </div>
 
-            <!-- Key Components -->
+            <!-- Common Commands -->
             <div class="section">
-                <h2>🔑 Key Components</h2>
-                <div class="description">
-                    <strong>Repository Structure:</strong>
-                    <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
-                        <li><strong>/bend</strong> - Backend application code</li>
-                        <li><strong>/fend</strong> - Frontend application code</li>
-                        <li><strong>/docs</strong> - Project documentation</li>
-                        <li><strong>.gitignore</strong> - Files excluded from version control (e.g., node_modules, .env files)</li>
-                        <li><strong>.releaseignore</strong> - Files excluded from deployment (e.g., test files, development configs)</li>
-                    </ul>
-                </div>
-
-                <h3>Common Git Commands Reference</h3>
+                <h2>📝 Common Git Commands</h2>
+                
                 <div class="code-block">
-                    # Clone repository<br>
-                    <code>git clone git@github.com:username/repo.git</code><br><br>
-                    
-                    # Create and switch to new branch<br>
-                    <code>git checkout -b dev1</code><br><br>
+                    # Clone your branch<br>
+                    <code>git clone -b dev1 https://github.com/org/project.git</code><br><br>
                     
                     # Check status<br>
                     <code>git status</code><br><br>
                     
-                    # Add files<br>
-                    <code>git add .</code><br><br>
-                    
-                    # Commit changes<br>
-                    <code>git commit -m "Description of changes"</code><br><br>
+                    # Add and commit<br>
+                    <code>git add .</code><br>
+                    <code>git commit -m "Your message"</code><br><br>
                     
                     # Push to GitHub<br>
                     <code>git push origin dev1</code><br><br>
@@ -658,11 +654,43 @@ graph TB
                     # Pull latest changes<br>
                     <code>git pull origin dev</code><br><br>
                     
-                    # View branches<br>
-                    <code>git branch -a</code><br><br>
+                    # View commit history<br>
+                    <code>git log --oneline</code><br><br>
                     
-                    # Switch branches<br>
-                    <code>git checkout dev</code>
+                    # Sync with dev branch<br>
+                    <code>git fetch origin</code><br>
+                    <code>git merge origin/dev</code>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+                
+                <div class="workflow-steps">
+                    <div class="step-card">
+                        <h3>For Developers</h3>
+                        <ul>
+                            <li>Write clear commit messages</li>
+                            <li>Commit frequently</li>
+                            <li>Test before pushing</li>
+                            <li>Keep PRs focused and small</li>
+                            <li>Sync with dev branch daily</li>
+                            <li>Never commit sensitive data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>For Maintainers</h3>
+                        <ul>
+                            <li>Review code thoroughly</li>
+                            <li>Provide constructive feedback</li>
+                            <li>Ensure tests pass</li>
+                            <li>Check for code standards</li>
+                            <li>Verify documentation</li>
+                            <li>Test before releasing</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
