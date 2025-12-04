@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Architecture - GitHub Workflow</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: #2d3748;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #4a5568;
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #2d3748;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            margin-top: 0;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+            color: white;
+        }
+        
+        .step-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .step-card li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .mermaid-container {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .environment-badges {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .badge.github {
+            background: #24292e;
+            color: white;
+        }
+        
+        .badge.pr {
+            background: #0366d6;
+            color: white;
+        }
+        
+        .badge.jenkins {
+            background: #d73a49;
+            color: white;
+        }
+        
+        .badge.uat {
+            background: #f9a825;
+            color: white;
+        }
+        
+        .badge.production {
+            background: #28a745;
+            color: white;
+        }
+        
+        .prereq-list {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .prereq-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .prereq-list li {
+            padding: 10px 0;
+            padding-left: 35px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .prereq-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 10px;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        
+        .code-block code {
+            color: #68d391;
+        }
+        
+        .warning-box {
+            background: #fff5f5;
+            border-left: 5px solid #fc8181;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .warning-box h3 {
+            color: #c53030;
+            margin-top: 0;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border-left: 5px solid #4299e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .info-box h3 {
+            color: #2c5282;
+            margin-top: 0;
+        }
+
+        .success-box {
+            background: #f0fff4;
+            border-left: 5px solid #48bb78;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .success-box h3 {
+            color: #22543d;
+            margin-top: 0;
+        }
+        
+        .troubleshoot-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .troubleshoot-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .solution {
+            color: #2f855a;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .role-badge.developer {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .role-badge.maintainer {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Development Architecture</h1>
+            <p class="subtitle">GitHub Pull Request Workflow with Jenkins CI/CD</p>
+        </header>
+        
+        <div class="content">
+            <!-- Prerequisites Section -->
+            <div class="section">
+                <h2>📋 Prerequisites</h2>
+                <div class="description">
+                    Before starting with this workflow, ensure all team members have the following set up properly.
+                </div>
+                
+                <div class="prereq-list">
+                    <ul>
+                        <li><strong>Git Installation:</strong> Git must be installed on all developer machines
+                            <div class="code-block">
+                                # Check if Git is installed<br>
+                                <code>git --version</code><br><br>
+                                # Download from: https://git-scm.com/downloads
+                            </div>
+                        </li>
+                        <li><strong>GitHub Account:</strong> Each developer needs a GitHub account (https://github.com/signup)</li>
+                        <li><strong>Repository Access:</strong> All developers must have write access permissions to the repository</li>
+                        <li><strong>Git Configuration:</strong> Configure user name and email
+                            <div class="code-block">
+                                <code>git config --global user.name "Your Name"</code><br>
+                                <code>git config --global user.email "your_email@example.com"</code>
+                            </div>
+                        </li>
+                        <li><strong>GitHub Personal Access Token:</strong> Create a token for HTTPS authentication
+                            <div class="code-block">
+                                # Generate token from:<br>
+                                # GitHub → Settings → Developer settings → Personal access tokens<br>
+                                # Select scopes: repo (full control of private repositories)<br><br>
+                                # Store credentials to avoid repeated login<br>
+                                <code>git config --global credential.helper store</code>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="section">
+                <h2>📖 Overview</h2>
+                <div class="description">
+                    This architecture demonstrates a GitHub Pull Request-based workflow where developers work on their own branches, push changes using HTTPS, and create pull requests for code review. The maintainer reviews and merges changes through the GitHub portal. The system uses the dev branch for integration, main/master branch for releases, and Jenkins for automated deployment.
+                </div>
+                
+                <div class="environment-badges">
+                    <span class="badge github">GitHub Repository</span>
+                    <span class="badge pr">Pull Requests</span>
+                    <span class="badge jenkins">Jenkins CI/CD</span>
+                    <span class="badge uat">UAT Environment</span>
+                    <span class="badge production">Production Environment</span>
+                </div>
+            </div>
+            
+            <!-- Workflow Process -->
+            <div class="section">
+                <h2>🔀 Complete Workflow Process</h2>
+                <div class="workflow-steps">
+                    <div class="step-card">
+                        <h3>1. Clone Branch</h3>
+                        <ul>
+                            <li>Each developer clones their specific branch</li>
+                            <li>Use HTTPS URL for cloning</li>
+                            <li>Work on backend and frontend code</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>2. Make Changes & Push</h3>
+                        <ul>
+                            <li>Make code changes in local branch</li>
+                            <li>Commit with meaningful messages</li>
+                            <li>Push changes to GitHub</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>3. Create Pull Request</h3>
+                        <ul>
+                            <li>Go to GitHub repository</li>
+                            <li>Create PR from your branch to dev</li>
+                            <li>Add description of changes</li>
+                            <li>Submit for review</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>4. Code Review</h3>
+                        <ul>
+                            <li>Maintainer reviews PR on GitHub</li>
+                            <li>Reviews code changes and comments</li>
+                            <li>Developer addresses feedback</li>
+                            <li>Maintainer approves when satisfied</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>5. Merge to Dev</h3>
+                        <ul>
+                            <li>Maintainer merges PR</li>
+                            <li>Changes merged to dev branch</li>
+                            <li>Optional: Delete feature branch</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>6. Release Process</h3>
+                        <ul>
+                            <li>Create PR: dev to main</li>
+                            <li>Final review of all changes</li>
+                            <li>Merge to main/master</li>
+                            <li>Jenkins auto-deploys</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Architecture Flowchart -->
+            <div class="section">
+                <h2>📊 Architecture Flowchart</h2>
+                <div class="mermaid-container">
+                    <div class="mermaid">
+graph TB
+    subgraph Developers["Development Team - Clone Own Branches via HTTPS"]
+        DEV1[DEV PC 1<br/>git clone -b dev1<br/>https://github.com/org/project]
+        DEV2[DEV PC 2<br/>dev2 branch]
+        DEV3[DEV PC 3<br/>dev3 branch]
+        DEV4[DEV PC 4<br/>dev4 branch]
+        DEV5[DEV PC 5<br/>dev5 branch]
+        DEV6[DEV PC 6<br/>dev6 branch]
+        DEV7[DEV PC 7<br/>dev7 branch]
+    end
+    
+    subgraph GitHub["GitHub Repository"]
+        BRANCHES[Individual Branches<br/>dev1, dev2, dev3, dev4<br/>dev5, dev6, dev7]
+        DEV_BRANCH[Dev Branch<br/>Integration Branch]
+        MAIN[Main/Master Branch<br/>Production Code]
+    end
+
+    subgraph PRProcess["Pull Request Process"]
+        PRS[Pull Requests<br/>dev1→dev, dev2→dev, etc.]
+        REVIEW[Maintainer<br/>Review & Approve]
+        PR_RELEASE[Pull Request<br/>dev → main]
+    end
+    
+    subgraph CI["CI/CD Pipeline"]
+        JENKINS[Jenkins<br/>Auto Deploy on Merge]
+    end
+    
+    subgraph Environments["Deployment Environments"]
+        UAT[UAT Environment<br/>/bend /fend]
+        PROD[Production<br/>/bend /fend]
+    end
+    
+    DEV1 -->|PUSH via HTTPS| BRANCHES
+    DEV2 -->|PUSH via HTTPS| BRANCHES
+    DEV3 -->|PUSH via HTTPS| BRANCHES
+    DEV4 -->|PUSH via HTTPS| BRANCHES
+    DEV5 -->|PUSH via HTTPS| BRANCHES
+    DEV6 -->|PUSH via HTTPS| BRANCHES
+    DEV7 -->|PUSH via HTTPS| BRANCHES
+    
+    BRANCHES -->|Create PR| PRS
+    PRS -->|Review| REVIEW
+    REVIEW -->|Merge| DEV_BRANCH
+    DEV_BRANCH -->|Create PR| PR_RELEASE
+    PR_RELEASE -->|Merge| MAIN
+    
+    MAIN -->|Webhook| JENKINS
+    JENKINS -->|RSYNC| UAT
+    UAT -->|RSYNC| PROD
+    
+    style DEV_BRANCH fill:#4299e1,stroke:#2b6cb0,stroke-width:3px,color:#fff
+    style MAIN fill:#48bb78,stroke:#2f855a,stroke-width:3px,color:#fff
+    style REVIEW fill:#9f7aea,stroke:#6b46c1,stroke-width:3px,color:#fff
+    style JENKINS fill:#ed8936,stroke:#c05621,stroke-width:3px,color:#fff
+    style UAT fill:#f6ad55,stroke:#dd6b20,stroke-width:3px,color:#fff
+    style PROD fill:#68d391,stroke:#38a169,stroke-width:3px,color:#fff
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step by Step Developer Guide -->
+            <div class="section">
+                <h2>📚 Developer Guide - Step by Step</h2>
+                
+                <div class="success-box">
+                    <h3>Step 1: Clone Your Branch</h3>
+                    <div class="code-block">
+                        # Clone your specific branch using HTTPS<br>
+                        <code>git clone -b dev1 https://github.com/organization/anyproject</code><br><br>
+                        
+                        # Navigate to directory<br>
+                        <code>cd anyproject</code><br><br>
+                        
+                        # Verify branch<br>
+                        <code>git branch</code>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>Step 2: Make Changes and Commit</h3>
+                    <div class="code-block">
+                        # Check status<br>
+                        <code>git status</code><br><br>
+                        
+                        # Add files<br>
+                        <code>git add .</code><br><br>
+                        
+                        # Commit<br>
+                        <code>git commit -m "Added new feature"</code>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>Step 3: Push to GitHub</h3>
+                    <div class="code-block">
+                        # Push changes<br>
+                        <code>git push origin dev1</code><br><br>
+                        
+                        # First time: enter username and Personal Access Token
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>Step 4: Create Pull Request</h3>
+                    <p>On GitHub web interface:</p>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Go to repository on GitHub</li>
+                        <li>Click "Pull requests" tab</li>
+                        <li>Click "New pull request"</li>
+                        <li>Set base: dev, compare: dev1</li>
+                        <li>Add title and description</li>
+                        <li>Click "Create pull request"</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Maintainer Guide -->
+            <div class="section">
+                <h2>👨‍💼 Maintainer Guide</h2>
+                
+                <div class="success-box">
+                    <h3>Review and Merge Pull Requests</h3>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Go to repository Pull requests tab</li>
+                        <li>Click on PR to review</li>
+                        <li>Review "Files changed" tab</li>
+                        <li>Add comments if needed</li>
+                        <li>Click "Review changes"</li>
+                        <li>Select "Approve" or "Request changes"</li>
+                        <li>Click "Merge pull request" when ready</li>
+                        <li>Confirm merge</li>
+                    </ol>
+                </div>
+
+                <div class="success-box">
+                    <h3>Release to Production</h3>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Create new PR: dev → main</li>
+                        <li>Review all accumulated changes</li>
+                        <li>Add release notes</li>
+                        <li>Merge to main branch</li>
+                        <li>Jenkins auto-deploys to UAT then Production</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="section">
+                <h2>🔧 Troubleshooting</h2>
+                
+                <div class="troubleshoot-item">
+                    <h4>❌ Authentication Failed</h4>
+                    <p><strong>Problem:</strong> Cannot push due to authentication error</p>
+                    <div class="solution">Solution:</div>
+                    <p>Use Personal Access Token instead of password</p>
+                    <div class="code-block">
+                        # Create token: GitHub → Settings → Developer settings<br>
+                        # → Personal access tokens → Generate new token<br>
+                        # Use token as password when pushing
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h4>❌ Failed to Push - Remote has Changes</h4>
+                    <p><strong>Problem:</strong> Remote branch has updates you don't have</p>
+                    <div class="solution">Solution:</div>
+                    <div class="code-block">
+                        <code>git pull origin dev1</code><br>
+                        # Resolve conflicts if any<br>
+                        <code>git push origin dev1</code>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h4>❌ Merge Conflicts</h4>
+                    <p><strong>Problem:</strong> Conflicts when pulling or merging</p>
+                    <div class="solution">Solution:</div>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Open conflicted files</li>
+                        <li>Look for conflict markers (&lt;&lt;&lt; === &gt;&gt;&gt;)</li>
+                        <li>Choose which code to keep</li>
+                        <li>Remove conflict markers</li>
+                        <li>git add . && git commit</li>
+                        <li>git push origin dev1</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Common Commands -->
+            <div class="section">
+                <h2>📝 Common Git Commands</h2>
+                
+                <div class="code-block">
+                    # Clone your branch<br>
+                    <code>git clone -b dev1 https://github.com/org/project.git</code><br><br>
+                    
+                    # Check status<br>
+                    <code>git status</code><br><br>
+                    
+                    # Add and commit<br>
+                    <code>git add .</code><br>
+                    <code>git commit -m "Your message"</code><br><br>
+                    
+                    # Push to GitHub<br>
+                    <code>git push origin dev1</code><br><br>
+                    
+                    # Pull latest changes<br>
+                    <code>git pull origin dev</code><br><br>
+                    
+                    # View commit history<br>
+                    <code>git log --oneline</code><br><br>
+                    
+                    # Sync with dev branch<br>
+                    <code>git fetch origin</code><br>
+                    <code>git merge origin/dev</code>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+                
+                <div class="workflow-steps">
+                    <div class="step-card">
+                        <h3>For Developers</h3>
+                        <ul>
+                            <li>Write clear commit messages</li>
+                            <li>Commit frequently</li>
+                            <li>Test before pushing</li>
+                            <li>Keep PRs focused and small</li>
+                            <li>Sync with dev branch daily</li>
+                            <li>Never commit sensitive data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>For Maintainers</h3>
+                        <ul>
+                            <li>Review code thoroughly</li>
+                            <li>Provide constructive feedback</li>
+                            <li>Ensure tests pass</li>
+                            <li>Check for code standards</li>
+                            <li>Verify documentation</li>
+                            <li>Test before releasing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
