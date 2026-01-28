@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Notes with Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        
+        .section h2 {
+            color: #2d3748;
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h2::before {
+            content: "▶";
+            margin-right: 10px;
+            color: #667eea;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .subsection h3 {
+            color: #4a5568;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+        
+        .subsection h4 {
+            color: #2d3748;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        
+        .description {
+            margin-bottom: 15px;
+            color: #4a5568;
+            font-style: italic;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        
+        .example {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #48bb78;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #2f855a;
+            margin-bottom: 8px;
+        }
+        
+        .note {
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .note strong {
+            color: #c53030;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        
+        .toc {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h3 {
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .toc ul {
+            list-style-position: inside;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 SQL Complete Reference Guide</h1>
+            <p>Comprehensive notes with practical examples</p>
+        </header>
+        
+        <div class="content">
+            <div class="toc">
+                <h3>📑 Table of Contents</h3>
+                <ul>
+                    <li><a href="#ddl">DDL - Data Definition Language</a></li>
+                    <li><a href="#dml">DML - Data Manipulation Language</a></li>
+                    <li><a href="#dql">DQL - Data Query Language</a></li>
+                    <li><a href="#tcl">TCL - Transaction Control Language</a></li>
+                    <li><a href="#advanced">Database Objects / Advanced SQL</a></li>
+                    <li><a href="#backup">Backup & Restore</a></li>
+                    <li><a href="#dcl">DCL - Data Control Language</a></li>
+                </ul>
+            </div>
+
+            <!-- DDL Section -->
+            <div id="ddl" class="section">
+                <h2>DDL - Data Definition Language</h2>
+                <p class="description">Commands used to define and modify database structure</p>
+                
+                <div class="subsection">
+                    <h3>CREATE</h3>
+                    <p class="description">Creates new database objects (tables, databases, indexes, etc.)</p>
+                    
+                    <h4>Create Database:</h4>
+                    <pre><code>CREATE DATABASE school;</code></pre>
+                    
+                    <h4>Create Table:</h4>
+                    <pre><code>CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    age INT CHECK (age >= 18),
+    enrollment_date DATE DEFAULT CURRENT_DATE
+);</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">Example: Creating a courses table</div>
+                        <pre><code>CREATE TABLE courses (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(100) NOT NULL,
+    credits INT DEFAULT 3,
+    instructor_id INT,
+    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
+);</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>ALTER</h3>
+                    <p class="description">Modifies existing database objects</p>
+                    
+                    <h4>Add Column:</h4>
+                    <pre><code>ALTER TABLE students 
+ADD COLUMN phone_number VARCHAR(15);</code></pre>
+                    
+                    <h4>Modify Column:</h4>
+                    <pre><code>ALTER TABLE students 
+MODIFY COLUMN email VARCHAR(150);</code></pre>
+                    
+                    <h4>Drop Column:</h4>
+                    <pre><code>ALTER TABLE students 
+DROP COLUMN phone_number;</code></pre>
+                    
+                    <h4>Add Constraint:</h4>
+                    <pre><code>ALTER TABLE students 
+ADD CONSTRAINT chk_age CHECK (age BETWEEN 18 AND 100);</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>DROP</h3>
+                    <p class="description">Permanently deletes database objects</p>
+                    
+                    <pre><code>-- Drop a table
+DROP TABLE students;
+
+-- Drop a database
+DROP DATABASE school;
+
+-- Drop with safety check
+DROP TABLE IF EXISTS students;</code></pre>
+                    
+                    <div class="note">
+                        <strong>Warning:</strong> DROP permanently deletes data. There's no undo!
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>TRUNCATE</h3>
+                    <p class="description">Removes all rows from a table but keeps the structure</p>
+                    
+                    <pre><code>TRUNCATE TABLE students;</code></pre>
+                    
+                    <div class="note">
+                        <strong>Note:</strong> TRUNCATE is faster than DELETE as it doesn't generate individual row delete logs. It also resets AUTO_INCREMENT counters.
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>RENAME</h3>
+                    <p class="description">Renames database objects</p>
+                    
+                    <pre><code>-- Rename a table
+RENAME TABLE students TO enrolled_students;
+
+-- Alternative syntax
+ALTER TABLE students RENAME TO enrolled_students;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>COMMENT</h3>
+                    <p class="description">Adds comments to database objects</p>
+                    
+                    <pre><code>-- Add comment to table
+ALTER TABLE students COMMENT = 'Table storing student information';
+
+-- Add comment to column
+ALTER TABLE students 
+MODIFY COLUMN email VARCHAR(100) COMMENT 'Student email address';</code></pre>
+                </div>
+            </div>
+
+            <!-- DML Section -->
+            <div id="dml" class="section">
+                <h2>DML - Data Manipulation Language</h2>
+                <p class="description">Commands used to manipulate data within tables</p>
+                
+                <div class="subsection">
+                    <h3>INSERT</h3>
+                    <p class="description">Adds new rows to a table</p>
+                    
+                    <h4>Insert Single Row:</h4>
+                    <pre><code>INSERT INTO students (first_name, last_name, email, age)
+VALUES ('John', 'Doe', 'john.doe@email.com', 20);</code></pre>
+                    
+                    <h4>Insert Multiple Rows:</h4>
+                    <pre><code>INSERT INTO students (first_name, last_name, email, age)
+VALUES 
+    ('Jane', 'Smith', 'jane.smith@email.com', 22),
+    ('Bob', 'Johnson', 'bob.j@email.com', 19),
+    ('Alice', 'Williams', 'alice.w@email.com', 21);</code></pre>
+                    
+                    <h4>Insert from Another Table:</h4>
+                    <pre><code>INSERT INTO archived_students (first_name, last_name, email)
+SELECT first_name, last_name, email 
+FROM students 
+WHERE enrollment_date < '2020-01-01';</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>UPDATE</h3>
+                    <p class="description">Modifies existing data in a table</p>
+                    
+                    <h4>Update Single Column:</h4>
+                    <pre><code>UPDATE students 
+SET email = 'newemail@email.com' 
+WHERE student_id = 1;</code></pre>
+                    
+                    <h4>Update Multiple Columns:</h4>
+                    <pre><code>UPDATE students 
+SET 
+    first_name = 'Jonathan',
+    age = 21
+WHERE student_id = 1;</code></pre>
+                    
+                    <h4>Update with Calculation:</h4>
+                    <pre><code>UPDATE courses 
+SET credits = credits + 1 
+WHERE course_name LIKE 'Advanced%';</code></pre>
+                    
+                    <div class="note">
+                        <strong>Warning:</strong> Always use WHERE clause with UPDATE to avoid updating all rows!
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>DELETE</h3>
+                    <p class="description">Removes rows from a table</p>
+                    
+                    <h4>Delete Specific Rows:</h4>
+                    <pre><code>DELETE FROM students 
+WHERE student_id = 5;</code></pre>
+                    
+                    <h4>Delete with Multiple Conditions:</h4>
+                    <pre><code>DELETE FROM students 
+WHERE age < 18 AND enrollment_date < '2023-01-01';</code></pre>
+                    
+                    <h4>Delete All Rows (Use with caution):</h4>
+                    <pre><code>DELETE FROM students;</code></pre>
+                    
+                    <div class="note">
+                        <strong>Warning:</strong> DELETE without WHERE clause removes all rows! Use TRUNCATE for better performance if that's the intention.
+                    </div>
+                </div>
+            </div>
+
+            <!-- DQL Section -->
+            <div id="dql" class="section">
+                <h2>DQL - Data Query Language</h2>
+                <p class="description">Commands used to retrieve data from the database</p>
+                
+                <div class="subsection">
+                    <h3>SELECT Basics</h3>
+                    
+                    <h4>Select All Columns (*):</h4>
+                    <pre><code>SELECT * FROM students;</code></pre>
+                    
+                    <h4>Select Specific Columns:</h4>
+                    <pre><code>SELECT first_name, last_name, email FROM students;</code></pre>
+                    
+                    <h4>Select with Column Alias:</h4>
+                    <pre><code>SELECT 
+    first_name AS 'First Name',
+    last_name AS 'Last Name',
+    age AS 'Student Age'
+FROM students;</code></pre>
+                    
+                    <h4>Select with Expression:</h4>
+                    <pre><code>SELECT 
+    first_name,
+    last_name,
+    age,
+    age + 5 AS 'Age in 5 Years'
+FROM students;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>DISTINCT</h3>
+                    <p class="description">Returns only unique values</p>
+                    
+                    <pre><code>-- Get unique ages
+SELECT DISTINCT age FROM students;
+
+-- Get unique combinations
+SELECT DISTINCT first_name, last_name FROM students;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>WHERE Clause</h3>
+                    <p class="description">Filters records based on conditions</p>
+                    
+                    <h4>Basic WHERE:</h4>
+                    <pre><code>SELECT * FROM students WHERE age > 20;</code></pre>
+                    
+                    <h4>Multiple Conditions with AND:</h4>
+                    <pre><code>SELECT * FROM students 
+WHERE age >= 20 AND first_name = 'John';</code></pre>
+                    
+                    <h4>Multiple Conditions with OR:</h4>
+                    <pre><code>SELECT * FROM students 
+WHERE age < 20 OR age > 25;</code></pre>
+                    
+                    <h4>Using IN:</h4>
+                    <pre><code>SELECT * FROM students 
+WHERE age IN (18, 20, 22, 25);</code></pre>
+                    
+                    <h4>Using NOT IN:</h4>
+                    <pre><code>SELECT * FROM students 
+WHERE first_name NOT IN ('John', 'Jane', 'Bob');</code></pre>
+                    
+                    <h4>Using BETWEEN:</h4>
+                    <pre><code>SELECT * FROM students 
+WHERE age BETWEEN 20 AND 25;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Wildcard Characters</h3>
+                    <p class="description">Used with LIKE operator for pattern matching</p>
+                    
+                    <h4>% (Percent) - Represents zero or more characters:</h4>
+                    <pre><code>-- Names starting with 'J'
+SELECT * FROM students WHERE first_name LIKE 'J%';
+
+-- Names ending with 'son'
+SELECT * FROM students WHERE last_name LIKE '%son';
+
+-- Names containing 'oh'
+SELECT * FROM students WHERE first_name LIKE '%oh%';</code></pre>
+                    
+                    <h4>_ (Underscore) - Represents exactly one character:</h4>
+                    <pre><code>-- Names with exactly 4 characters
+SELECT * FROM students WHERE first_name LIKE '____';
+
+-- Names where 2nd letter is 'o'
+SELECT * FROM students WHERE first_name LIKE '_o%';
+
+-- Email with pattern
+SELECT * FROM students WHERE email LIKE '___@%.com';</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">Combining Wildcards:</div>
+                        <pre><code>-- Find emails from gmail or yahoo
+SELECT * FROM students 
+WHERE email LIKE '%@gmail.com' OR email LIKE '%@yahoo.com';
+
+-- Find names: 'J' + any char + 'hn'
+SELECT * FROM students WHERE first_name LIKE 'J_hn';</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>LIMIT</h3>
+                    <p class="description">Limits the number of rows returned</p>
+                    
+                    <pre><code>-- Get first 5 students
+SELECT * FROM students LIMIT 5;
+
+-- Get 5 students starting from row 10 (pagination)
+SELECT * FROM students LIMIT 5 OFFSET 10;
+
+-- Alternative syntax
+SELECT * FROM students LIMIT 10, 5;  -- offset, count</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Subqueries (Sub SQL)</h3>
+                    <p class="description">A query nested inside another query</p>
+                    
+                    <h4>Subquery in WHERE clause:</h4>
+                    <pre><code>-- Students older than average age
+SELECT * FROM students 
+WHERE age > (SELECT AVG(age) FROM students);</code></pre>
+                    
+                    <h4>Subquery with IN:</h4>
+                    <pre><code>-- Students enrolled in specific courses
+SELECT * FROM students 
+WHERE student_id IN (
+    SELECT student_id FROM enrollments 
+    WHERE course_id = 101
+);</code></pre>
+                    
+                    <h4>Subquery in FROM clause:</h4>
+                    <pre><code>SELECT avg_age.age_group, COUNT(*) as count
+FROM (
+    SELECT 
+        CASE 
+            WHEN age < 20 THEN 'Teen'
+            WHEN age BETWEEN 20 AND 25 THEN 'Young Adult'
+            ELSE 'Adult'
+        END as age_group
+    FROM students
+) as avg_age
+GROUP BY avg_age.age_group;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>ORDER BY</h3>
+                    <p class="description">Sorts the result set</p>
+                    
+                    <h4>Ascending Order (default):</h4>
+                    <pre><code>SELECT * FROM students ORDER BY age ASC;</code></pre>
+                    
+                    <h4>Descending Order:</h4>
+                    <pre><code>SELECT * FROM students ORDER BY age DESC;</code></pre>
+                    
+                    <h4>Multiple Columns:</h4>
+                    <pre><code>SELECT * FROM students 
+ORDER BY last_name ASC, first_name ASC;</code></pre>
+                    
+                    <h4>Order by Position:</h4>
+                    <pre><code>SELECT first_name, last_name, age 
+FROM students 
+ORDER BY 3 DESC;  -- Orders by 3rd column (age)</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Aggregate Functions</h3>
+                    <p class="description">Perform calculations on multiple rows</p>
+                    
+                    <h4>COUNT - Count rows:</h4>
+                    <pre><code>-- Count all students
+SELECT COUNT(*) AS total_students FROM students;
+
+-- Count non-null emails
+SELECT COUNT(email) AS students_with_email FROM students;
+
+-- Count distinct ages
+SELECT COUNT(DISTINCT age) AS unique_ages FROM students;</code></pre>
+                    
+                    <h4>SUM - Sum of values:</h4>
+                    <pre><code>SELECT SUM(credits) AS total_credits FROM courses;</code></pre>
+                    
+                    <h4>AVG - Average value:</h4>
+                    <pre><code>SELECT AVG(age) AS average_age FROM students;</code></pre>
+                    
+                    <h4>MAX - Maximum value:</h4>
+                    <pre><code>SELECT MAX(age) AS oldest_student FROM students;</code></pre>
+                    
+                    <h4>MIN - Minimum value:</h4>
+                    <pre><code>SELECT MIN(age) AS youngest_student FROM students;</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">Combining Multiple Aggregates:</div>
+                        <pre><code>SELECT 
+    COUNT(*) AS total_students,
+    AVG(age) AS average_age,
+    MIN(age) AS youngest,
+    MAX(age) AS oldest,
+    SUM(age) AS sum_of_ages
+FROM students;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>GROUP BY</h3>
+                    <p class="description">Groups rows with same values</p>
+                    
+                    <h4>Basic GROUP BY:</h4>
+                    <pre><code>-- Count students by age
+SELECT age, COUNT(*) AS student_count 
+FROM students 
+GROUP BY age;</code></pre>
+                    
+                    <h4>Multiple Columns:</h4>
+                    <pre><code>SELECT 
+    last_name, 
+    first_name, 
+    COUNT(*) AS name_count 
+FROM students 
+GROUP BY last_name, first_name;</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">GROUP BY with Aggregate Functions:</div>
+                        <pre><code>SELECT 
+    course_id,
+    COUNT(*) AS enrollment_count,
+    AVG(grade) AS average_grade,
+    MAX(grade) AS highest_grade,
+    MIN(grade) AS lowest_grade
+FROM enrollments
+GROUP BY course_id;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>HAVING</h3>
+                    <p class="description">Filters groups (used with GROUP BY)</p>
+                    
+                    <pre><code>-- Ages with more than 2 students
+SELECT age, COUNT(*) AS count 
+FROM students 
+GROUP BY age 
+HAVING COUNT(*) > 2;</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">Difference between WHERE and HAVING:</div>
+                        <pre><code>-- WHERE filters rows before grouping
+-- HAVING filters groups after aggregation
+
+SELECT 
+    course_id, 
+    AVG(grade) AS avg_grade
+FROM enrollments
+WHERE grade >= 50  -- Filter individual rows
+GROUP BY course_id
+HAVING AVG(grade) > 75;  -- Filter grouped results</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>JOINS</h3>
+                    <p class="description">Combines rows from two or more tables</p>
+                    
+                    <h4>Sample Tables Setup:</h4>
+                    <pre><code>-- Students table
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+-- Courses table
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(50)
+);
+
+-- Enrollments table
+CREATE TABLE enrollments (
+    enrollment_id INT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    grade INT
+);</code></pre>
+                    
+                    <h4>INNER JOIN:</h4>
+                    <p class="description">Returns only matching rows from both tables</p>
+                    <pre><code>SELECT 
+    students.name,
+    courses.course_name,
+    enrollments.grade
+FROM students
+INNER JOIN enrollments ON students.student_id = enrollments.student_id
+INNER JOIN courses ON enrollments.course_id = courses.course_id;</code></pre>
+                    
+                    <h4>LEFT JOIN (LEFT OUTER JOIN):</h4>
+                    <p class="description">Returns all rows from left table and matching rows from right table</p>
+                    <pre><code>-- Get all students, even those not enrolled in any course
+SELECT 
+    students.name,
+    courses.course_name
+FROM students
+LEFT JOIN enrollments ON students.student_id = enrollments.student_id
+LEFT JOIN courses ON enrollments.course_id = courses.course_id;</code></pre>
+                    
+                    <h4>RIGHT JOIN (RIGHT OUTER JOIN):</h4>
+                    <p class="description">Returns all rows from right table and matching rows from left table</p>
+                    <pre><code>-- Get all courses, even those with no students
+SELECT 
+    students.name,
+    courses.course_name
+FROM students
+RIGHT JOIN enrollments ON students.student_id = enrollments.student_id
+RIGHT JOIN courses ON enrollments.course_id = courses.course_id;</code></pre>
+                    
+                    <h4>FULL JOIN (FULL OUTER JOIN):</h4>
+                    <p class="description">Returns all rows when there's a match in either table</p>
+                    <pre><code>-- MySQL doesn't support FULL JOIN directly, use UNION
+SELECT 
+    students.name,
+    courses.course_name
+FROM students
+LEFT JOIN enrollments ON students.student_id = enrollments.student_id
+LEFT JOIN courses ON enrollments.course_id = courses.course_id
+UNION
+SELECT 
+    students.name,
+    courses.course_name
+FROM students
+RIGHT JOIN enrollments ON students.student_id = enrollments.student_id
+RIGHT JOIN courses ON enrollments.course_id = courses.course_id;</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">JOIN with Table Aliases:</div>
+                        <pre><code>SELECT 
+    s.name AS student_name,
+    c.course_name,
+    e.grade
+FROM students s
+INNER JOIN enrollments e ON s.student_id = e.student_id
+INNER JOIN courses c ON e.course_id = c.course_id
+WHERE e.grade > 80
+ORDER BY e.grade DESC;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>UNION</h3>
+                    <p class="description">Combines result sets of two or more SELECT statements</p>
+                    
+                    <h4>UNION (removes duplicates):</h4>
+                    <pre><code>SELECT first_name, last_name FROM students
+UNION
+SELECT first_name, last_name FROM instructors;</code></pre>
+                    
+                    <h4>UNION ALL (keeps duplicates):</h4>
+                    <pre><code>SELECT first_name, last_name FROM students
+UNION ALL
+SELECT first_name, last_name FROM instructors;</code></pre>
+                    
+                    <div class="note">
+                        <strong>Note:</strong> All SELECT statements must have the same number of columns with compatible data types.
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">UNION with ORDER BY:</div>
+                        <pre><code>SELECT name, 'Student' AS type FROM students
+UNION
+SELECT name, 'Instructor' AS type FROM instructors
+ORDER BY name;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TCL Section -->
+            <div id="tcl" class="section">
+                <h2>TCL - Transaction Control Language</h2>
+                <p class="description">Commands used to manage transactions</p>
+                
+                <div class="subsection">
+                    <h3>Understanding Transactions</h3>
+                    <p class="description">A transaction is a sequence of operations performed as a single logical unit of work. Transactions follow ACID properties: Atomicity, Consistency, Isolation, Durability.</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>COMMIT</h3>
+                    <p class="description">Saves all changes made in the current transaction</p>
+                    
+                    <pre><code>-- Start transaction
+START TRANSACTION;
+
+-- Perform operations
+INSERT INTO students (first_name, last_name, age) 
+VALUES ('Tom', 'Brown', 20);
+
+UPDATE students SET age = 21 WHERE student_id = 5;
+
+-- Save changes permanently
+COMMIT;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>ROLLBACK</h3>
+                    <p class="description">Undoes all changes made in the current transaction</p>
+                    
+                    <pre><code>-- Start transaction
+START TRANSACTION;
+
+-- Perform operations
+DELETE FROM students WHERE age < 18;
+
+-- Oops! Wrong condition, undo everything
+ROLLBACK;</code></pre>
+                    
+                    <div class="example">
+                        <div class="example-title">Bank Transfer Example:</div>
+                        <pre><code>START TRANSACTION;
+
+-- Deduct from account A
+UPDATE accounts 
+SET balance = balance - 1000 
+WHERE account_id = 1;
+
+-- Add to account B
+UPDATE accounts 
+SET balance = balance + 1000 
+WHERE account_id = 2;
+
+-- Check if both operations succeeded
+-- If yes: COMMIT;
+-- If no: ROLLBACK;
+COMMIT;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>SAVEPOINT</h3>
+                    <p class="description">Creates a point within a transaction to which you can later rollback</p>
+                    
+                    <pre><code>START TRANSACTION;
+
+INSERT INTO students VALUES (1, 'John', 'Doe', 20);
+SAVEPOINT savepoint1;
+
+INSERT INTO students VALUES (2, 'Jane', 'Smith', 22);
+SAVEPOINT savepoint2;
+
+INSERT INTO students VALUES (3, 'Bob', 'Johnson', 19);
+
+-- Rollback to savepoint2 (removes Bob, keeps John and Jane)
+ROLLBACK TO savepoint2;
+
+COMMIT;</code></pre>
+                </div>
+            </div>
+
+            <!-- Advanced SQL Section -->
+            <div id="advanced" class="section">
+                <h2>Database Objects / Advanced SQL</h2>
+                
+                <div class="subsection">
+                    <h3>Triggers</h3>
+                    <p class="description">Automatically executed code in response to certain events on a table</p>
+                    
+                    <h4>BEFORE INSERT Trigger:</h4>
+                    <pre><code>DELIMITER //
+CREATE TRIGGER before_student_insert
+BEFORE INSERT ON students
+FOR EACH ROW
+BEGIN
+    -- Auto-set enrollment date
+    IF NEW.enrollment_date IS NULL THEN
+        SET NEW.enrollment_date = CURDATE();
+    END IF;
+    
+    -- Validate age
+    IF NEW.age < 18 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Students must be 18 or older';
+    END IF;
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>AFTER INSERT Trigger:</h4>
+                    <pre><code>DELIMITER //
+CREATE TRIGGER after_student_insert
+AFTER INSERT ON students
+FOR EACH ROW
+BEGIN
+    -- Log the insertion
+    INSERT INTO student_audit_log (student_id, action, action_date)
+    VALUES (NEW.student_id, 'INSERTED', NOW());
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>BEFORE UPDATE Trigger:</h4>
+                    <pre><code>DELIMITER //
+CREATE TRIGGER before_student_update
+BEFORE UPDATE ON students
+FOR EACH ROW
+BEGIN
+    -- Keep track of modification date
+    SET NEW.last_modified = NOW();
+    
+    -- Prevent email changes
+    IF NEW.email != OLD.email THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Email cannot be changed';
+    END IF;
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>AFTER DELETE Trigger:</h4>
+                    <pre><code>DELIMITER //
+CREATE TRIGGER after_student_delete
+AFTER DELETE ON students
+FOR EACH ROW
+BEGIN
+    -- Archive deleted student
+    INSERT INTO deleted_students 
+    SELECT *, NOW() FROM students WHERE student_id = OLD.student_id;
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>View and Drop Triggers:</h4>
+                    <pre><code>-- Show all triggers
+SHOW TRIGGERS;
+
+-- Show triggers for specific table
+SHOW TRIGGERS FROM database_name WHERE `Table` = 'students';
+
+-- Drop a trigger
+DROP TRIGGER IF EXISTS before_student_insert;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Events</h3>
+                    <p class="description">Scheduled tasks that run automatically at specified times</p>
+                    
+                    <h4>Enable Event Scheduler:</h4>
+                    <pre><code>-- Check if event scheduler is running
+SHOW VARIABLES LIKE 'event_scheduler';
+
+-- Enable event scheduler
+SET GLOBAL event_scheduler = ON;</code></pre>
+                    
+                    <h4>One-Time Event:</h4>
+                    <pre><code>DELIMITER //
+CREATE EVENT cleanup_old_logs
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN
+    DELETE FROM logs WHERE log_date < DATE_SUB(NOW(), INTERVAL 30 DAY);
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>Recurring Event:</h4>
+                    <pre><code>DELIMITER //
+CREATE EVENT daily_backup
+ON SCHEDULE EVERY 1 DAY
+STARTS '2026-02-01 02:00:00'
+DO
+BEGIN
+    -- Backup student data
+    INSERT INTO students_backup SELECT * FROM students;
+    
+    -- Clean old backups
+    DELETE FROM students_backup 
+    WHERE backup_date < DATE_SUB(NOW(), INTERVAL 7 DAY);
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>Complex Scheduling:</h4>
+                    <pre><code>DELIMITER //
+CREATE EVENT weekly_report
+ON SCHEDULE EVERY 1 WEEK
+STARTS '2026-02-03 09:00:00'  -- Every Monday at 9 AM
+ENDS '2026-12-31 23:59:59'
+DO
+BEGIN
+    -- Generate weekly report
+    INSERT INTO weekly_reports (report_date, total_students, avg_age)
+    SELECT NOW(), COUNT(*), AVG(age) FROM students;
+END//
+DELIMITER ;</code></pre>
+                    
+                    <h4>Manage Events:</h4>
+                    <pre><code>-- Show all events
+SHOW EVENTS;
+
+-- Show events from specific database
+SHOW EVENTS FROM school;
+
+-- Disable an event
+ALTER EVENT daily_backup DISABLE;
+
+-- Enable an event
+ALTER EVENT daily_backup ENABLE;
+
+-- Drop an event
+DROP EVENT IF EXISTS daily_backup;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Stored Procedures</h3>
+                    <p class="description">Reusable SQL code blocks</p>
+                    
+                    <pre><code>DELIMITER //
+CREATE PROCEDURE GetStudentsByAge(IN min_age INT)
+BEGIN
+    SELECT * FROM students WHERE age >= min_age;
+END//
+DELIMITER ;
+
+-- Call the procedure
+CALL GetStudentsByAge(20);</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Views</h3>
+                    <p class="description">Virtual tables based on SELECT queries</p>
+                    
+                    <pre><code>-- Create a view
+CREATE VIEW active_students AS
+SELECT student_id, first_name, last_name, email
+FROM students
+WHERE enrollment_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR);
+
+-- Use the view
+SELECT * FROM active_students;
+
+-- Drop a view
+DROP VIEW IF EXISTS active_students;</code></pre>
+                </div>
+            </div>
+
+            <!-- Backup & Restore Section -->
+            <div id="backup" class="section">
+                <h2>Backup & Restore</h2>
+                <p class="description">Commands for backing up and restoring databases</p>
+                
+                <div class="subsection">
+                    <h3>Backup Database</h3>
+                    
+                    <h4>Backup Entire Database:</h4>
+                    <pre><code>mysqldump -u username -p database_name > backup.sql</code></pre>
+                    
+                    <h4>Backup Specific Table:</h4>
+                    <pre><code>mysqldump -u username -p database_name table_name > table_backup.sql</code></pre>
+                    
+                    <h4>Backup Multiple Tables:</h4>
+                    <pre><code>mysqldump -u username -p database_name table1 table2 table3 > multi_table_backup.sql</code></pre>
+                    
+                    <h4>Backup Multiple Databases:</h4>
+                    <pre><code>mysqldump -u username -p --databases db1 db2 db3 > multiple_db_backup.sql</code></pre>
+                    
+                    <h4>Backup All Databases:</h4>
+                    <pre><code>mysqldump -u username -p --all-databases > all_databases_backup.sql</code></pre>
+                    
+                    <h4>Backup with Compression:</h4>
+                    <pre><code>mysqldump -u username -p database_name | gzip > backup.sql.gz</code></pre>
+                    
+                    <h4>Backup Structure Only (No Data):</h4>
+                    <pre><code>mysqldump -u username -p --no-data database_name > structure_only.sql</code></pre>
+                    
+                    <h4>Backup Data Only (No Structure):</h4>
+                    <pre><code>mysqldump -u username -p --no-create-info database_name > data_only.sql</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Restore Database</h3>
+                    
+                    <h4>Restore Entire Database:</h4>
+                    <pre><code>mysql -u username -p database_name < backup.sql</code></pre>
+                    
+                    <h4>Restore Compressed Backup:</h4>
+                    <pre><code>gunzip < backup.sql.gz | mysql -u username -p database_name</code></pre>
+                    
+                    <h4>Restore and Create Database:</h4>
+                    <pre><code>mysql -u username -p -e "CREATE DATABASE database_name"
+mysql -u username -p database_name < backup.sql</code></pre>
+                    
+                    <h4>Restore from SQL Shell:</h4>
+                    <pre><code>mysql -u username -p
+USE database_name;
+SOURCE /path/to/backup.sql;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Useful Backup Options</h3>
+                    <table>
+                        <tr>
+                            <th>Option</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>--single-transaction</td>
+                            <td>For InnoDB tables, creates consistent backup without locking</td>
+                        </tr>
+                        <tr>
+                            <td>--quick</td>
+                            <td>Faster backup for large tables</td>
+                        </tr>
+                        <tr>
+                            <td>--lock-tables</td>
+                            <td>Locks all tables before backing up</td>
+                        </tr>
+                        <tr>
+                            <td>--add-drop-database</td>
+                            <td>Adds DROP DATABASE before CREATE DATABASE</td>
+                        </tr>
+                        <tr>
+                            <td>--add-drop-table</td>
+                            <td>Adds DROP TABLE before CREATE TABLE</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example">
+                        <div class="example-title">Production Backup Example:</div>
+                        <pre><code>mysqldump -u root -p \
+  --single-transaction \
+  --quick \
+  --lock-tables=false \
+  --routines \
+  --triggers \
+  --events \
+  school > school_backup_$(date +%Y%m%d).sql</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DCL Section -->
+            <div id="dcl" class="section">
+                <h2>DCL - Data Control Language (Optional)</h2>
+                <p class="description">Commands used to control access to data in the database</p>
+                
+                <div class="subsection">
+                    <h3>GRANT</h3>
+                    <p class="description">Gives privileges to users</p>
+                    
+                    <h4>Grant All Privileges:</h4>
+                    <pre><code>GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'localhost';</code></pre>
+                    
+                    <h4>Grant Specific Privileges:</h4>
+                    <pre><code>GRANT SELECT, INSERT, UPDATE ON database_name.* 
+TO 'username'@'localhost';</code></pre>
+                    
+                    <h4>Grant on Specific Table:</h4>
+                    <pre><code>GRANT SELECT, INSERT ON database_name.students 
+TO 'username'@'localhost';</code></pre>
+                    
+                    <h4>Grant with Password:</h4>
+                    <pre><code>CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password123';
+GRANT SELECT ON school.* TO 'newuser'@'localhost';</code></pre>
+                    
+                    <h4>Grant with Grant Option:</h4>
+                    <pre><code>GRANT SELECT, INSERT ON database_name.* 
+TO 'username'@'localhost' WITH GRANT OPTION;</code></pre>
+                    
+                    <h4>Apply Changes:</h4>
+                    <pre><code>FLUSH PRIVILEGES;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>REVOKE</h3>
+                    <p class="description">Removes privileges from users</p>
+                    
+                    <h4>Revoke Specific Privileges:</h4>
+                    <pre><code>REVOKE INSERT, UPDATE ON database_name.* 
+FROM 'username'@'localhost';</code></pre>
+                    
+                    <h4>Revoke All Privileges:</h4>
+                    <pre><code>REVOKE ALL PRIVILEGES ON database_name.* 
+FROM 'username'@'localhost';</code></pre>
+                    
+                    <h4>Revoke Grant Option:</h4>
+                    <pre><code>REVOKE GRANT OPTION ON database_name.* 
+FROM 'username'@'localhost';</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>User Management</h3>
+                    
+                    <h4>Create User:</h4>
+                    <pre><code>CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';</code></pre>
+                    
+                    <h4>Drop User:</h4>
+                    <pre><code>DROP USER 'username'@'localhost';</code></pre>
+                    
+                    <h4>Change Password:</h4>
+                    <pre><code>ALTER USER 'username'@'localhost' IDENTIFIED BY 'newpassword';</code></pre>
+                    
+                    <h4>Show Grants:</h4>
+                    <pre><code>SHOW GRANTS FOR 'username'@'localhost';</code></pre>
+                    
+                    <h4>Show All Users:</h4>
+                    <pre><code>SELECT User, Host FROM mysql.user;</code></pre>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Common Privileges</h3>
+                    <table>
+                        <tr>
+                            <th>Privilege</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>SELECT</td>
+                            <td>Read data from tables</td>
+                        </tr>
+                        <tr>
+                            <td>INSERT</td>
+                            <td>Insert new rows into tables</td>
+                        </tr>
+                        <tr>
+                            <td>UPDATE</td>
+                            <td>Modify existing data</td>
+                        </tr>
+                        <tr>
+                            <td>DELETE</td>
+                            <td>Delete rows from tables</td>
+                        </tr>
+                        <tr>
+                            <td>CREATE</td>
+                            <td>Create new databases and tables</td>
+                        </tr>
+                        <tr>
+                            <td>DROP</td>
+                            <td>Delete databases and tables</td>
+                        </tr>
+                        <tr>
+                            <td>ALTER</td>
+                            <td>Modify table structures</td>
+                        </tr>
+                        <tr>
+                            <td>INDEX</td>
+                            <td>Create and drop indexes</td>
+                        </tr>
+                        <tr>
+                            <td>EXECUTE</td>
+                            <td>Execute stored procedures</td>
+                        </tr>
+                        <tr>
+                            <td>ALL PRIVILEGES</td>
+                            <td>All available privileges</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="section">
+                <h2>Quick Reference Summary</h2>
+                
+                <div class="subsection">
+                    <h3>SQL Command Categories</h3>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Purpose</th>
+                            <th>Main Commands</th>
+                        </tr>
+                        <tr>
+                            <td><strong>DDL</strong></td>
+                            <td>Define database structure</td>
+                            <td>CREATE, ALTER, DROP, TRUNCATE, RENAME</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DML</strong></td>
+                            <td>Manipulate data</td>
+                            <td>INSERT, UPDATE, DELETE</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DQL</strong></td>
+                            <td>Query/Retrieve data</td>
+                            <td>SELECT (with various clauses)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TCL</strong></td>
+                            <td>Manage transactions</td>
+                            <td>COMMIT, ROLLBACK, SAVEPOINT</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DCL</strong></td>
+                            <td>Control access</td>
+                            <td>GRANT, REVOKE</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Best Practices</h3>
+                    <ul style="list-style-position: inside; padding-left: 20px;">
+                        <li>Always use WHERE clause with UPDATE and DELETE to avoid modifying all rows</li>
+                        <li>Use transactions for operations that must succeed or fail together</li>
+                        <li>Create backups before performing major operations</li>
+                        <li>Use meaningful aliases for better readability</li>
+                        <li>Index frequently queried columns for better performance</li>
+                        <li>Normalize your database to reduce redundancy</li>
+                        <li>Use prepared statements to prevent SQL injection</li>
+                        <li>Comment your complex queries for future reference</li>
+                        <li>Test queries on small datasets before running on production</li>
+                        <li>Use EXPLAIN to analyze query performance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
